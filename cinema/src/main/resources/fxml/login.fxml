@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" style="-fx-background-image: url('images/background.png');" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.piotrek.cinema.controller.LoginController">
+   <children>
+      <AnchorPane layoutX="14.0" layoutY="31.0" opacity="0.7" prefHeight="350.0" prefWidth="396.0" styleClass="panelDark">
+         <children>
+            <Label layoutX="10.0" layoutY="47.0" prefHeight="39.0" prefWidth="379.0" styleClass="h1" text="Welcome to ModernCinema" />
+            <Label layoutX="28.0" layoutY="86.0" prefHeight="84.0" prefWidth="328.0" styleClass="textNormal" text="If you are first time here Sign up for free and find out how much you can gain." wrapText="true" />
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="452.0" layoutY="31.0" opacity="0.9" prefHeight="350.0" prefWidth="341.0" styleClass="panelDark">
+         <children>
+            <Label alignment="CENTER" layoutX="97.0" layoutY="22.0" prefHeight="46.0" prefWidth="149.0" styleClass="h3" text="Sign in" />
+            <JFXTextField fx:id="loginField" focusColor="#7f2626" layoutX="40.0" layoutY="88.0" prefHeight="39.0" prefWidth="264.0" promptText="username" styleClass="input" />
+            <JFXPasswordField fx:id="passwordField" focusColor="#7f2626" layoutX="39.0" layoutY="149.0" prefHeight="39.0" prefWidth="264.0" promptText="password" styleClass="input" />
+            <JFXButton fx:id="loginButton" layoutX="82.0" layoutY="249.0" onAction="#login" prefHeight="31.0" prefWidth="178.0" styleClass="buttonPrimary" text="Sign in" />
+            <FontAwesomeIconView fill="WHITE" glyphName="USER" layoutX="22.0" layoutY="120.0" size="15" wrappingWidth="14.5" />
+            <FontAwesomeIconView fill="WHITE" glyphName="KEY" layoutX="22.0" layoutY="180.0" size="15" />
+            <Label fx:id="message" layoutX="35.0" layoutY="206.0" prefHeight="25.0" prefWidth="271.0" textFill="RED" wrapText="true" />
+         </children>
+      </AnchorPane>
+      <JFXButton fx:id="registerButton" layoutX="261.0" layoutY="198.0" onAction="#register" prefHeight="31.0" prefWidth="127.0" ripplerFill="#545050" styleClass="buttonPrimary" text="Sign up" />
+   </children>
+</AnchorPane>

@@ -1,0 +1,97 @@
+.root{
+    -fx-text-fill: red;
+}
+
+.panelDark{
+    -fx-background-color: black;
+}
+
+.buttonPrimary{
+    -fx-background-color: #7F2626;
+    -fx-text-fill: #D6E3DA;
+}
+
+.h1{
+    -fx-text-fill: #D6E3DA;
+    -fx-font-size: 27px;
+}
+
+
+.h3{
+    -fx-text-fill: #D6E3DA;
+    -fx-font-size: 20px;
+}
+
+.textNormal{
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+}
+
+.input{
+    -fx-text-fill: #D6E3DA;
+}
+
+.borderMenu{
+    -fx-background-color: #050505;
+
+}
+
+.contentPanel{
+    -fx-background-color: #1C1C1C;
+}
+
+.table-row-cell:odd:filled{
+    -fx-background-color: #1C1C1C;
+}
+
+.table-row-cell:even:filled{
+    -fx-background-color: #2E2E2E;
+}
+
+.table-row-cell:filled:selected{
+    -fx-background-color:firebrick;
+}
+
+.table-row-cell{
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-cell, .table-cell .label{
+    -fx-text-fill: #D6E3DA;
+}
+
+.table-row-cell:empty{
+    -fx-background-color: #2E2E2E;
+}
+
+.table-view, .table-view:focused{
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color:transparent white transparent transparent;
+    -fx-border-width:0.1;
+}
+
+.table-view .column-header-background{
+    -fx-background-color: linear-gradient(#131313 0.0%, #424141 100.0%);
+    -fx-text-fill: white;
+}
+
+.navbar .button:hover{
+    -fx-background-color: yellow;
+}
+
+.toggle-button:selected {
+    -fx-background-color: firebrick;
+}
+
+.toggle-button{
+    -fx-background-color: black;
+}
+
+.toggle-button:disabled{
+    -fx-background-color: grey;
+}

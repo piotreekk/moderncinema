@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXTimePicker?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="768.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.piotrek.cinema.controller.ManageSeancesController">
+   <children>
+      <TableView fx:id="table" layoutY="61.0" prefHeight="426.0" prefWidth="800.0" AnchorPane.bottomAnchor="242.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
+         <columns>
+            <TableColumn fx:id="dateCol" prefWidth="134.0" text="Data" />
+            <TableColumn fx:id="timeCol" prefWidth="102.0" text="Godzina" />
+            <TableColumn fx:id="movieCol" prefWidth="237.0" text="Film" />
+            <TableColumn fx:id="allSeatsCol" prefWidth="125.0" text="Ilosc Miejsc" />
+            <TableColumn fx:id="freeSeatsCol" prefWidth="198.0" text="Wolne miejsca" />
+         </columns>
+      </TableView>
+      <Label layoutX="14.0" layoutY="33.0" prefHeight="28.0" prefWidth="364.0" text="Zaplanowane seanse" />
+      <AnchorPane layoutY="527.0" prefHeight="241.0" prefWidth="800.0" style="-fx-background-color: grey;">
+         <children>
+            <JFXDatePicker fx:id="dateInput" layoutX="240.0" layoutY="88.0" prefHeight="18.0" prefWidth="320.0" />
+            <ChoiceBox fx:id="movieChoice" layoutX="240.0" layoutY="47.0" prefHeight="26.0" prefWidth="320.0" />
+            <ChoiceBox fx:id="auditoriumChoice" layoutX="240.0" layoutY="7.0" prefHeight="26.0" prefWidth="320.0" />
+            <JFXTextField fx:id="seatsInput" layoutX="240.0" layoutY="160.0" prefHeight="28.0" prefWidth="320.0" />
+            <JFXButton fx:id="addSeanceBtn" layoutX="240.0" layoutY="200.0" prefHeight="26.0" prefWidth="320.0" text="Add Seance" />
+            <JFXTimePicker fx:id="timeInput" layoutX="240.0" layoutY="127.0" prefHeight="26.0" prefWidth="320.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

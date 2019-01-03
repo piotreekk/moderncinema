@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.piotrek.cinema.controller.DashboardController">
+   <left>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="borderMenu" BorderPane.alignment="CENTER">
+         <children>
+            <Label layoutX="14.0" layoutY="14.0" prefHeight="49.0" prefWidth="121.0" text="ModernCinema" textFill="WHITE">
+               <font>
+                  <Font name="Keraleeyam" size="24.0" />
+               </font>
+            </Label>
+            <AnchorPane fx:id="borderMenu" layoutX="1.0" layoutY="131.0" prefHeight="182.0" prefWidth="202.0" style="-fx-background-color: #0b0b0b;">
+               <children>
+                  <Label fx:id="nameLabel" alignment="CENTER" layoutX="7.0" layoutY="108.0" prefHeight="25.0" prefWidth="189.0" text="Piotr Strumnik" textAlignment="CENTER" />
+                  <Label fx:id="emailLabel" alignment="CENTER" layoutY="83.0" prefHeight="16.0" prefWidth="202.0" text="pstrumnik@gmail.com">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="roleLabel" alignment="CENTER" layoutX="7.0" layoutY="133.0" prefHeight="25.0" prefWidth="189.0" text="admin" textAlignment="CENTER" />
+                  <MaterialDesignIconView fill="#8d4b4b" glyphName="ACCOUNT" layoutX="72.0" layoutY="60.0" size="60" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="adminPane" layoutX="2.0" layoutY="451.0" prefHeight="260.0" prefWidth="200.0" styleClass="navbar">
+               <children>
+                  <MaterialDesignIconView fill="WHITE" glyphName="FILE_VIDEO" layoutX="13.0" layoutY="134.0" size="25" />
+                  <MaterialDesignIconView fill="WHITE" glyphName="HOME" layoutX="13.0" layoutY="43.0" size="25" />
+                  <MaterialDesignIconView fill="WHITE" glyphName="ACCOUNT_MULTIPLE" layoutX="13.0" layoutY="88.0" size="25" />
+                  <MaterialDesignIconView fill="WHITE" glyphName="FILMSTRIP" layoutX="13.0" layoutY="180.0" size="25" />
+                  <JFXButton fx:id="admin_homeBtn" layoutX="-7.0" layoutY="19.0" prefHeight="30.0" prefWidth="200.0" text="Home        " />
+                  <JFXButton fx:id="accountsBtn" layoutY="65.0" prefHeight="30.0" prefWidth="200.0" text="     Manage Accounts" />
+                  <JFXButton fx:id="importBtn" layoutY="111.0" prefHeight="30.0" prefWidth="200.0" text="Import Movies" />
+                  <JFXButton fx:id="manageBtn" layoutY="156.0" prefHeight="30.0" prefWidth="200.0" text="    Manage Seances" />
+                  <JFXButton fx:id="auditoriumBtn" layoutY="205.0" prefHeight="30.0" prefWidth="200.0" text="Auditorium    " />
+                  <MaterialDesignIconView fill="WHITE" glyphName="VIDEO" layoutX="13.0" layoutY="227.0" size="25" />
+               </children>
+            </AnchorPane>
+            <Label layoutX="75.0" layoutY="55.0" text="by Piotr Strumnik" />
+            <AnchorPane fx:id="userPane" layoutX="2.0" layoutY="293.0" prefHeight="202.0" prefWidth="197.0" styleClass="navbar">
+               <children>
+                  <MaterialDesignIconView fill="WHITE" glyphName="FILE_VIDEO" layoutX="13.0" layoutY="83.0" size="25" />
+                  <MaterialDesignIconView fill="WHITE" glyphName="HOME" layoutX="13.0" layoutY="43.0" size="25" />
+                  <MaterialDesignIconView fill="WHITE" glyphName="TICKET" layoutX="13.0" layoutY="124.0" size="25" />
+                  <JFXButton fx:id="usr_homeBtn" layoutX="-7.0" layoutY="19.0" prefHeight="30.0" prefWidth="200.0" text="Home        " />
+                  <JFXButton fx:id="reservationBtn" layoutY="100.0" prefHeight="30.0" prefWidth="200.0" text="Reservations" />
+                  <JFXButton fx:id="btnbtn" layoutY="141.0" prefHeight="30.0" prefWidth="200.0" text="    Wolny Przycisk" />
+                  <JFXButton fx:id="seancesBtn" layoutY="59.0" prefHeight="30.0" prefWidth="200.0" text="Seances       " />
+                  <MaterialDesignIconView fill="WHITE" glyphName="" layoutX="13.0" layoutY="163.0" size="25" />
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+   </left>
+   <center>
+      <AnchorPane fx:id="content" prefHeight="200.0" prefWidth="200.0" styleClass="contentPanel" BorderPane.alignment="CENTER" />
+   </center>
+</BorderPane>

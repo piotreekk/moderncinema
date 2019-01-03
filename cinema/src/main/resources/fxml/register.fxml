@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="400.0" styleClass="panelDark" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.piotrek.cinema.controller.RegisterController">
+   <children>
+      <FontAwesomeIconView fill="#7f2626" glyphName="FILM" layoutX="30.0" layoutY="113.0" size="100" wrappingWidth="63.0" />
+      <JFXTextField fx:id="firstName" focusColor="#7f2626" layoutX="70.0" layoutY="177.0" prefHeight="40.0" prefWidth="260.0" promptText="First Name" styleClass="input" />
+      <JFXTextField fx:id="lastName" focusColor="#7f2626" layoutX="70.0" layoutY="237.0" prefHeight="40.0" prefWidth="260.0" promptText="Last Name" styleClass="input" />
+      <JFXTextField fx:id="email" focusColor="#7f2626" layoutX="70.0" layoutY="297.0" prefHeight="40.0" prefWidth="260.0" promptText="email" styleClass="input" />
+      <JFXPasswordField fx:id="password" focusColor="#7f2626" layoutX="70.0" layoutY="357.0" prefHeight="40.0" prefWidth="260.0" promptText="password" />
+      <Label layoutX="200.0" layoutY="77.0" text="Sign Up" textFill="#7f2626">
+         <font>
+            <Font size="34.0" />
+         </font>
+      </Label>
+      <JFXButton layoutX="70.0" layoutY="479.0" onAction="#register" prefHeight="40.0" prefWidth="260.0" styleClass="buttonPrimary" text="Add Account" />
+      <FontAwesomeIconView fx:id="warning0" fill="#b90000" glyphName="WARNING" layoutX="40.0" layoutY="204.0" size="15" visible="false" wrappingWidth="29.0" />
+      <FontAwesomeIconView fx:id="warning1" fill="#b90000" glyphName="WARNING" layoutX="40.0" layoutY="262.0" size="15" visible="false" wrappingWidth="29.0" />
+      <FontAwesomeIconView fx:id="warning2" fill="#b90000" glyphName="WARNING" layoutX="40.0" layoutY="322.0" size="15" visible="false" wrappingWidth="29.0" />
+      <FontAwesomeIconView fx:id="warning3" fill="#b90000" glyphName="WARNING" layoutX="40.0" layoutY="382.0" size="15" visible="false" wrappingWidth="29.0" />
+   </children>
+</AnchorPane>
