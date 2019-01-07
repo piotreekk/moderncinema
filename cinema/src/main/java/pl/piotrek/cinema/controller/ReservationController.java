@@ -4,21 +4,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import pl.piotrek.cinema.model.ReservationForm;
+import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.model.User;
 import pl.piotrek.cinema.model.table.ReservationTableModel;
 import pl.piotrek.cinema.util.CookieRestTemplate;
@@ -70,7 +65,7 @@ public class ReservationController implements Initializable {
     }
 
     private void initContent(){
-        String url = "http://localhost:8080/reservation/user/" + user.getId();
+        String url = ServerInfo.RESERVATION_ENDPOINT + "/user/" + user.getId();
         ResponseEntity<List<String>> response = cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<String>>(){});
         if(response.getStatusCode() != HttpStatus.OK) return;
 
@@ -88,7 +83,6 @@ public class ReservationController implements Initializable {
 
         reservations = FXCollections.observableArrayList(list);
         table.setItems(reservations);
-
     }
 
     private void initTableConfig(){

@@ -10,11 +10,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.config.SpringFXMLLoader;
 import pl.piotrek.cinema.model.ReservationForm;
 import pl.piotrek.cinema.model.Seance;
@@ -28,7 +28,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 @Controller
 public class SeancesController implements Initializable {
@@ -92,7 +95,7 @@ public class SeancesController implements Initializable {
     }
 
     private void persistReservation(Seance seance, List<Integer> choosenSeats){
-        String url = "http://localhost:8080/reservation/add";
+        String url = ServerInfo.RESERVATION_ENDPOINT + "/add";
         ReservationForm reservation = new ReservationForm();
         reservation.setSeanceId(seance.getId());
         reservation.setSeats(choosenSeats);
@@ -140,7 +143,7 @@ public class SeancesController implements Initializable {
     }
 
     private void loadDataFromAPI(LocalDate date){
-        String url = "http://localhost:8080/seance/get/bydate/{date}";
+        String url = ServerInfo.SEANCE_ENDPOINT + "/get/bydate/{date}";
         ResponseEntity<ArrayList<Seance>> response =
                 cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<ArrayList<Seance>>(){}, date);
 

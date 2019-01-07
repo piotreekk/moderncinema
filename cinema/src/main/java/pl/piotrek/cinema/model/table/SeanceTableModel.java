@@ -3,9 +3,12 @@ package pl.piotrek.cinema.model.table;
 import javafx.beans.property.*;
 import javafx.scene.image.ImageView;
 import pl.piotrek.cinema.model.Movie;
-import pl.piotrek.cinema.model.Seance;;
+import pl.piotrek.cinema.model.Seance;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+;
 
 public class SeanceTableModel{
     private Seance seance;

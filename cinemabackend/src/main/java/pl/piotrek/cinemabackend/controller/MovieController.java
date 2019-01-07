@@ -1,6 +1,5 @@
 package pl.piotrek.cinemabackend.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pl.piotrek.cinemabackend.model.Movie;
@@ -11,8 +10,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/movie")
 public class MovieController {
-    @Autowired
     private MovieService movieService;
+
+    public MovieController(MovieService movieService) {
+        this.movieService = movieService;
+    }
 
     @PostMapping("/add")
     @ResponseStatus(value = HttpStatus.CREATED, reason = "Movie added!")

@@ -10,7 +10,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -19,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.model.Auditorium;
 import pl.piotrek.cinema.model.table.AuditoriumTableModel;
 import pl.piotrek.cinema.util.CookieRestTemplate;
@@ -40,6 +40,7 @@ public class AuditoriumController implements Initializable{
 
     @FXML
     private TableColumn<AuditoriumTableModel, Integer> seatsCountCol;
+
 
     @FXML
     private TableColumn<AuditoriumTableModel, MaterialDesignIconView> deleteCol;
@@ -64,34 +65,18 @@ public class AuditoriumController implements Initializable{
 
     ObservableList<AuditoriumTableModel> auditories;
 
+    ContextMenu menu;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initTableConfig();
         loadDataFromAPI();
         table.setItems(auditories);
         button.setOnAction(event -> addAuditorium());
-        table.setOnMouseClicked(event -> {
-            if(event.getButton() == MouseButton.SECONDARY){
-                AuditoriumTableModel atm = table.getSelectionModel().getSelectedItem();
-                showContextMenu(event.getScreenX(), event.getScreenY(), atm.getAuditorium());
-            }
-        });
-
-        table.setTooltip(new Tooltip("Right click on row to show context menu"));
-
-    }
-
-    private void showContextMenu(double x_pos, double y_pos, Auditorium auditorium){
-        ContextMenu menu = new ContextMenu();
-        MenuItem mi1 = new MenuItem("Update");
-        mi1.setOnAction(event1 -> updateAuditorium(auditorium));
-        menu.getItems().add(mi1);
-        menu.show(table, x_pos, y_pos);
     }
 
     private void loadDataFromAPI(){
-        String url = "http://localhost:8080/auditorium/get/all";
-
+        String url = ServerInfo.AUDITORIUM_ENDPOINT + "/get/all";
         ResponseEntity<ArrayList<Auditorium>> response =
                 cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<ArrayList<Auditorium>>(){});
         ArrayList<Auditorium> responseList = response.getBody();
@@ -107,7 +92,7 @@ public class AuditoriumController implements Initializable{
         String rows = rowsInput.getText();
         String cols = colsInput.getText();
 
-        String url = "http://localhost:8080/auditorium/add";
+        String url = ServerInfo.AUDITORIUM_ENDPOINT + "/add";
         MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
         map.add("name", name);
         map.add("rows", rows);
@@ -142,16 +127,35 @@ public class AuditoriumController implements Initializable{
     }
 
     private void performUpdate(Auditorium auditorium){
-        String url = "http://localhost:8080/auditorium/update/" + auditorium.getId() + "?name={name}&rows={rows}&cols={cols}";
+        String url = ServerInfo.AUDITORIUM_ENDPOINT + "/update/" + auditorium.getId() + "?name={name}&rows={rows}&cols={cols}";
         cookieRestTemplate.put(url, null, auditorium.getName(), auditorium.getRows(), auditorium.getCols());
     }
 
     private void initTableConfig(){
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        table.setTooltip(new Tooltip("Right click on row to show context menu"));
+        table.setRowFactory( tv -> {
+            TableRow<AuditoriumTableModel> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if(event.getButton() == MouseButton.SECONDARY && !row.isEmpty()){
+                    AuditoriumTableModel rowData = row.getItem();
+                    showContextMenu(event.getScreenX(), event.getScreenY(), rowData.getAuditorium());
+                }
+            });
+            return row ;
+        });
+
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         rowsCol.setCellValueFactory(new PropertyValueFactory<>("rows"));
         seatsCountCol.setCellValueFactory(new PropertyValueFactory<>("seatsCount"));
-        deleteCol.setCellValueFactory(new PropertyValueFactory<>("delete"));
-        updateCol.setCellValueFactory(new PropertyValueFactory<>("update"));
     }
+
+    private void showContextMenu(double x_pos, double y_pos, Auditorium auditorium){
+        if(menu != null && menu.isShowing()) menu.hide();
+        MenuItem mi1 = new MenuItem("Update");
+        mi1.setOnAction(event1 -> updateAuditorium(auditorium));
+        menu = new ContextMenu(mi1);
+        menu.show(table, x_pos, y_pos);
+    }
+
 }

@@ -1,7 +1,7 @@
 package pl.piotrek.cinema.model.table;
+
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
-
 import javafx.beans.property.*;
 import pl.piotrek.cinema.model.Auditorium;
 

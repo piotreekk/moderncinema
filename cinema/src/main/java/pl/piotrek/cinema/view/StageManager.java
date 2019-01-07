@@ -4,7 +4,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import pl.piotrek.cinema.config.SpringFXMLLoader;
 
 import java.io.IOException;
@@ -27,6 +26,8 @@ public class StageManager {
 
     private void show(final Parent rootnode, String title) {
         Scene scene = prepareScene(rootnode);
+
+//        scene.getStylesheets().add("style.css");
 
         primaryStage.setTitle(title);
         primaryStage.setScene(scene);
@@ -72,5 +73,8 @@ public class StageManager {
         return rootNode;
     }
 
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
 
 }

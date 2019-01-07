@@ -8,26 +8,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.stage.StageStyle;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.client.RestTemplate;
 import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.model.User;
-import pl.piotrek.cinema.view.StageManager;
-import pl.piotrek.cinema.view.ViewList;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 @Controller
-public class RegisterController implements Initializable {
-
-    @Autowired
-    @Lazy
-    private StageManager stageManager;
-    
+public class NewEmployeeController implements Initializable {
     @FXML
     private JFXTextField firstName;
 
@@ -57,13 +48,12 @@ public class RegisterController implements Initializable {
 
     @FXML
     void register(){
-
         User user = new User();
         user.setFirstName(firstName.getText());
         user.setLastName(lastName.getText());
         user.setEmail(email.getText());
         user.setPassword(password.getText());
-        user.setRole("user");
+        user.setRole("admin");
 
         fieldsNotEmpty = !firstName.getText().isEmpty() && !lastName.getText().isEmpty() && !email.getText().isEmpty()
                 && !password.getText().isEmpty();
@@ -83,10 +73,9 @@ public class RegisterController implements Initializable {
         User addedUser = restTemplate.postForObject(url, request, User.class);
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("User saved successfully.");
+        alert.setTitle("Admin saved successfully.");
         alert.setHeaderText(null);
         alert.setContentText(addedUser.toString());
-        alert.setOnHiding(event -> stageManager.switchScene(ViewList.LOGIN));
         alert.show();
 
     }
@@ -94,6 +83,7 @@ public class RegisterController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         validateFields();
+
     }
 
     private class Patterns{
@@ -102,6 +92,7 @@ public class RegisterController implements Initializable {
 
         // 8 znaków, minimum 1 litera i 1 cyfra
         public static final String PASSWORD = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$";
+
     };
 
     private void validateFields(){

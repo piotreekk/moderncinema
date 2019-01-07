@@ -12,9 +12,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.model.Movie;
 import pl.piotrek.cinema.model.table.MovieTableModel;
 import pl.piotrek.cinema.util.CookieRestTemplate;
@@ -26,9 +26,11 @@ import java.util.ResourceBundle;
 
 @Controller
 public class ImportMoviesController implements Initializable {
-    @Autowired
     CookieRestTemplate cookieRestTemplate;
 
+    public ImportMoviesController(CookieRestTemplate cookieRestTemplate) {
+        this.cookieRestTemplate = cookieRestTemplate;
+    }
 
     @FXML
     private TableView<MovieTableModel> table;
@@ -90,7 +92,6 @@ public class ImportMoviesController implements Initializable {
                         .ifPresent(response -> addMovie(movie));
             }
         });
-
     }
 
     private void loadDataFromAPI(){
@@ -137,8 +138,7 @@ public class ImportMoviesController implements Initializable {
     }
 
     private void addMovie(MovieTableModel movie){
-//        System.out.println("Movie added successfully!");
-        String url = "http://localhost:8080/movie/add";
+        String url = ServerInfo.MOVIE_ENDPOINT + "/add";
         Movie request = new Movie(movie.getId(), movie.getTitle(), movie.getOverview(), movie.getReleaseDate(), movie.getPosterPath());
         ResponseEntity<Movie> response = cookieRestTemplate.postForEntity(url, request, Movie.class);
         System.out.println(response);

@@ -28,13 +28,13 @@
                   <MaterialDesignIconView fill="#8d4b4b" glyphName="ACCOUNT" layoutX="72.0" layoutY="60.0" size="60" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="adminPane" layoutX="2.0" layoutY="451.0" prefHeight="260.0" prefWidth="200.0" styleClass="navbar">
+            <AnchorPane fx:id="adminPane" layoutX="2.0" layoutY="406.0" prefHeight="260.0" prefWidth="200.0" styleClass="navbar">
                <children>
                   <MaterialDesignIconView fill="WHITE" glyphName="FILE_VIDEO" layoutX="13.0" layoutY="134.0" size="25" />
                   <MaterialDesignIconView fill="WHITE" glyphName="HOME" layoutX="13.0" layoutY="43.0" size="25" />
                   <MaterialDesignIconView fill="WHITE" glyphName="ACCOUNT_MULTIPLE" layoutX="13.0" layoutY="88.0" size="25" />
                   <MaterialDesignIconView fill="WHITE" glyphName="FILMSTRIP" layoutX="13.0" layoutY="180.0" size="25" />
-                  <JFXButton fx:id="admin_homeBtn" layoutX="-7.0" layoutY="19.0" prefHeight="30.0" prefWidth="200.0" text="Home        " />
+                  <JFXButton fx:id="admin_homeBtn" layoutY="19.0" prefHeight="30.0" prefWidth="200.0" text="Home        " />
                   <JFXButton fx:id="accountsBtn" layoutY="65.0" prefHeight="30.0" prefWidth="200.0" text="     Manage Accounts" />
                   <JFXButton fx:id="importBtn" layoutY="111.0" prefHeight="30.0" prefWidth="200.0" text="Import Movies" />
                   <JFXButton fx:id="manageBtn" layoutY="156.0" prefHeight="30.0" prefWidth="200.0" text="    Manage Seances" />
@@ -43,12 +43,12 @@
                </children>
             </AnchorPane>
             <Label layoutX="75.0" layoutY="55.0" text="by Piotr Strumnik" />
-            <AnchorPane fx:id="userPane" layoutX="2.0" layoutY="293.0" prefHeight="202.0" prefWidth="197.0" styleClass="navbar">
+            <AnchorPane fx:id="userPane" layoutX="2.0" layoutY="384.0" prefHeight="202.0" prefWidth="197.0" styleClass="navbar" visible="false">
                <children>
                   <MaterialDesignIconView fill="WHITE" glyphName="FILE_VIDEO" layoutX="13.0" layoutY="83.0" size="25" />
                   <MaterialDesignIconView fill="WHITE" glyphName="HOME" layoutX="13.0" layoutY="43.0" size="25" />
                   <MaterialDesignIconView fill="WHITE" glyphName="TICKET" layoutX="13.0" layoutY="124.0" size="25" />
-                  <JFXButton fx:id="usr_homeBtn" layoutX="-7.0" layoutY="19.0" prefHeight="30.0" prefWidth="200.0" text="Home        " />
+                  <JFXButton fx:id="usr_homeBtn" layoutY="19.0" prefHeight="30.0" prefWidth="200.0" text="Home        " />
                   <JFXButton fx:id="reservationBtn" layoutY="100.0" prefHeight="30.0" prefWidth="200.0" text="Reservations" />
                   <JFXButton fx:id="btnbtn" layoutY="141.0" prefHeight="30.0" prefWidth="200.0" text="    Wolny Przycisk" />
                   <JFXButton fx:id="seancesBtn" layoutY="59.0" prefHeight="30.0" prefWidth="200.0" text="Seances       " />

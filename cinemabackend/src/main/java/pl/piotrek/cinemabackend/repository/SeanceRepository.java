@@ -3,7 +3,6 @@ package pl.piotrek.cinemabackend.repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import pl.piotrek.cinemabackend.model.Movie;
 import pl.piotrek.cinemabackend.model.Seance;
 import pl.piotrek.cinemabackend.model.Seat;
 

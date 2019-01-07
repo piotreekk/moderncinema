@@ -7,6 +7,8 @@ import pl.piotrek.cinemabackend.model.User;
 import pl.piotrek.cinemabackend.repository.UserRepository;
 import pl.piotrek.cinemabackend.service.UserService;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
@@ -26,6 +28,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public List<User> getActiveEmployees() {
+        return userRepository.findAllByEnabledTrue();
+    }
+
+    @Override
+    public List<User> getAllEmployees() {
+        return (List) userRepository.findAll();
     }
 
 }

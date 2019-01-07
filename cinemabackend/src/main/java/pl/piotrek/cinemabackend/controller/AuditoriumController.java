@@ -1,9 +1,8 @@
 package pl.piotrek.cinemabackend.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pl.piotrek.cinemabackend.model.Auditorium;
-import pl.piotrek.cinemabackend.model.Seat;
 import pl.piotrek.cinemabackend.service.AuditoriumService;
 
 import java.util.List;
@@ -11,26 +10,25 @@ import java.util.List;
 @RestController
 @RequestMapping("/auditorium")
 public class AuditoriumController {
-    @Autowired
-    AuditoriumService auditoriumService;
+    private AuditoriumService auditoriumService;
+
+    public AuditoriumController(AuditoriumService auditoriumService) {
+        this.auditoriumService = auditoriumService;
+    }
 
     @PostMapping("/add")
-    void addAuditorium(@RequestParam String name, @RequestParam Integer rows, @RequestParam Integer cols){
+    @ResponseStatus(value = HttpStatus.CREATED, reason = "Auditorium added!")
+    void add(@RequestParam String name, @RequestParam Integer rows, @RequestParam Integer cols){
         auditoriumService.add(name, rows, cols);
     }
 
     @PutMapping("/update/{id}")
-    void updateAuditorium(@PathVariable("id") Integer id, @RequestParam String name, @RequestParam Integer rows, @RequestParam Integer cols){
+    void update(@PathVariable("id") Integer id, @RequestParam String name, @RequestParam Integer rows, @RequestParam Integer cols){
         auditoriumService.update(id, name, rows, cols);
     }
 
-    @GetMapping("/get")
-    Auditorium getAuditiorium(@RequestParam Integer id){
-        return auditoriumService.get(id);
-    }
-
     @GetMapping("/get/all")
-    List<Auditorium> getAuditiories(){
+    List<Auditorium> getAll(){
         return auditoriumService.getAll();
     }
 

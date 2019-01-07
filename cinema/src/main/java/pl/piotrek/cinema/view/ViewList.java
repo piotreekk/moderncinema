@@ -124,8 +124,31 @@ public enum ViewList {
         public String getFxmlPath() {
             return "/fxml/reservation.fxml";
         }
+    },
+    MANAGE_ACCOUNTS{
+        @Override
+        public String getTitle() {
+            return "Manage Accounts";
+        }
+
+        @Override
+        public String getFxmlPath() {
+            return "/fxml/manage_accounts.fxml";
+        }
+    },
+    NEW_EMPLOYEE{
+        @Override
+        public String getTitle() {
+            return "New Employee";
+        }
+
+        @Override
+        public String getFxmlPath() {
+            return "/fxml/new_employee.fxml";
+        }
     }
     ;
+
 
     public abstract String getTitle();
     public abstract String getFxmlPath();

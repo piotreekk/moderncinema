@@ -16,14 +16,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/seance")
 public class SeanceController {
-    @Autowired
     private SeanceService seanceService;
+
+    public SeanceController(SeanceService seanceService) {
+        this.seanceService = seanceService;
+    }
 
     @GetMapping("/get/all")
     List<Seance> getAll(){
         return seanceService.getAll();
     }
-
 
     @GetMapping("/get/bydate/{date}")
     List<Seance> getByDate(@PathVariable("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
@@ -39,9 +41,10 @@ public class SeanceController {
     List<Seat> getTakenSeats(@PathVariable("id") Integer id){
         return seanceService.getTakenSeats(id);
     }
+
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    Seance addSeance(@RequestBody SeanceForm seance){
+    Seance add(@RequestBody SeanceForm seance){
         return seanceService.addSeance(seance);
     }
 

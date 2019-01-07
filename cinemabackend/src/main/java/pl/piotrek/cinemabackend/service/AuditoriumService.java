@@ -2,7 +2,6 @@ package pl.piotrek.cinemabackend.service;
 
 
 import pl.piotrek.cinemabackend.model.Auditorium;
-import pl.piotrek.cinemabackend.model.Seat;
 
 import java.util.List;
 

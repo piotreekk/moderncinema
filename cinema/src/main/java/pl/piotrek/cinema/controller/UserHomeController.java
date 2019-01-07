@@ -15,6 +15,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.model.Movie;
 import pl.piotrek.cinema.util.CookieRestTemplate;
 
@@ -44,7 +45,7 @@ public class UserHomeController implements Initializable {
     }
 
     private void initContent(){
-        String url = "http://localhost:8080/movie/get/all";
+        String url = ServerInfo.MOVIE_ENDPOINT + "/get/all";
         ResponseEntity<List<Movie> > response = cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Movie>>(){});
         if(response.getStatusCode() != HttpStatus.OK) return;
 

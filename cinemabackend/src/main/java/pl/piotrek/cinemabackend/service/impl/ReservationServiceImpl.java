@@ -1,11 +1,13 @@
 package pl.piotrek.cinemabackend.service.impl;
 
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.piotrek.cinemabackend.forms.ReservationForm;
 import pl.piotrek.cinemabackend.model.*;
-import pl.piotrek.cinemabackend.repository.*;
+import pl.piotrek.cinemabackend.repository.ReservationRepository;
+import pl.piotrek.cinemabackend.repository.SeanceRepository;
+import pl.piotrek.cinemabackend.repository.SeatRepository;
+import pl.piotrek.cinemabackend.repository.UserRepository;
 import pl.piotrek.cinemabackend.service.ReservationService;
 
 import java.util.ArrayList;

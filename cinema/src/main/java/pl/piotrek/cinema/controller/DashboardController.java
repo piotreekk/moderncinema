@@ -8,7 +8,6 @@ import javafx.scene.layout.AnchorPane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
-import pl.piotrek.cinema.config.SpringFXMLLoader;
 import pl.piotrek.cinema.model.User;
 import pl.piotrek.cinema.view.StageManager;
 import pl.piotrek.cinema.view.ViewList;
@@ -20,11 +19,13 @@ import java.util.ResourceBundle;
 public class DashboardController implements Initializable {
     private User user;
 
-    @FXML
-    private AnchorPane content;
+    @Autowired
+    public DashboardController(User user) {
+        this.user = user;
+    }
 
     @FXML
-    private AnchorPane borderMenu;
+    private AnchorPane content;
 
     @Lazy
     @Autowired
@@ -70,25 +71,20 @@ public class DashboardController implements Initializable {
     @FXML
     private Label roleLabel;
 
-
-    @Autowired
-    public DashboardController(User user) {
-        this.user = user;
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         if(user.getRole().toLowerCase().equals("admin")){
-            userPane.setVisible(true);
+            userPane.setVisible(false);
             adminPane.setVisible(true);
+            stageManager.loadViewOnPane(content, ViewList.ADMIN_HOME);
         } else{
             userPane.setVisible(true);
-            adminPane.setVisible(true);
+            adminPane.setVisible(false);
+            stageManager.loadViewOnPane(content, ViewList.USER_HOME);
         }
 
         initUserInfo();
         bindMenuActions();
-
     }
 
     private void initUserInfo(){
@@ -102,7 +98,7 @@ public class DashboardController implements Initializable {
         importBtn.setOnAction(event -> stageManager.loadViewOnPane(content, ViewList.IMPORT_MOVIES));
         manageBtn.setOnAction(event -> stageManager.loadViewOnPane(content, ViewList.MANAGE_SEANCES));
         auditoriumBtn.setOnAction(event -> stageManager.loadViewOnPane(content, ViewList.AUDITORIUM));
-
+        accountsBtn.setOnAction(event -> stageManager.loadViewOnPane(content, ViewList.MANAGE_ACCOUNTS));
 
         usr_homeBtn.setOnAction(event -> stageManager.loadViewOnPane(content, ViewList.USER_HOME));
         reservationBtn.setOnAction(event -> stageManager.loadViewOnPane(content, ViewList.RESERVATION));

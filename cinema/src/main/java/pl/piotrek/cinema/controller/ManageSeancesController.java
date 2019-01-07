@@ -8,9 +8,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.ImageView;
 import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -19,11 +21,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.client.RestClientException;
+import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.model.Auditorium;
 import pl.piotrek.cinema.model.Movie;
 import pl.piotrek.cinema.model.Seance;
 import pl.piotrek.cinema.model.SeanceForm;
-import pl.piotrek.cinema.model.table.SeanceTableModel;
 import pl.piotrek.cinema.model.table.SeanceTableModel;
 import pl.piotrek.cinema.util.CookieRestTemplate;
 
@@ -31,7 +33,6 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 @Controller
@@ -103,7 +104,7 @@ public class ManageSeancesController implements Initializable {
             // TODO
             // Przed dodaniem seansu trzeba bedzie sprawdzic czy w danej sali nie odbywał się od 3h inny seans. Nie mam
             // w api bezposredniego pola o trwaniu seansu, wiec trzeba zrobic dluzsza przerwe
-            String url = "http://localhost:8080/seance/add";
+            String url = ServerInfo.SEANCE_ENDPOINT + "/add";
             try {
                 ResponseEntity<Seance> response = cookieRestTemplate.postForEntity(url, seance, Seance.class);
 
@@ -128,7 +129,7 @@ public class ManageSeancesController implements Initializable {
     }
 
     private void loadDataFromAPI(){
-        String url = "http://localhost:8080/seance/get/all";
+        String url = ServerInfo.SEANCE_ENDPOINT + "/get/all";
 
         ResponseEntity<ArrayList<Seance> > response =
                 cookieRestTemplate.exchange(url, HttpMethod.GET, null,  new ParameterizedTypeReference<ArrayList<Seance>>(){});
@@ -151,7 +152,7 @@ public class ManageSeancesController implements Initializable {
     }
 
     private void initMoviesChoice(){
-        String url = "http://localhost:8080/movie/get/all";
+        String url = ServerInfo.MOVIE_ENDPOINT + "/get/all";
         ResponseEntity<ArrayList<Movie> > response =
                 cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<ArrayList<Movie> >(){});
 
@@ -174,7 +175,7 @@ public class ManageSeancesController implements Initializable {
     }
 
     private void initAuditoriumChoice(){
-        String url = "http://localhost:8080/auditorium/get/all";
+        String url = ServerInfo.AUDITORIUM_ENDPOINT + "/get/all";
         ResponseEntity<ArrayList<Auditorium> > response =
                 cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<ArrayList<Auditorium> >(){});
 

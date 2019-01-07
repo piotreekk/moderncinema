@@ -14,12 +14,14 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.model.Auditorium;
 import pl.piotrek.cinema.model.Seance;
 import pl.piotrek.cinema.model.Seat;
 import pl.piotrek.cinema.util.CookieRestTemplate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class ChooseSeatsController{
@@ -36,7 +38,7 @@ public class ChooseSeatsController{
     }
 
     public void init(Seance seance) {
-        String url = "http://localhost:8080/seance/" + seance.getId() + "/seats/taken";
+        String url = ServerInfo.SEANCE_ENDPOINT + "/" + seance.getId() + "/seats/taken";
         ResponseEntity<ArrayList<Seat>> response = cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<ArrayList<Seat>>() { });
         ArrayList<Seat> takenSeats = response.getBody();
         drawCinemaHall(seance.getAuditorium(), takenSeats);

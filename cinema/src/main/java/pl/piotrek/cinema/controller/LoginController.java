@@ -3,7 +3,6 @@ package pl.piotrek.cinema.controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -11,15 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpRequest;
-import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.model.User;
 import pl.piotrek.cinema.util.CookieRestTemplate;
 import pl.piotrek.cinema.view.StageManager;
@@ -33,9 +30,13 @@ public class LoginController {
     // StageManager będzie dostępny dopiero po wywołaniu metody start w mainie. Autowiring odbywa się już w inicie,
     // kiedy to nie wiemy jeszcze o istnieniu StageManagera
     private StageManager stageManager;
+    private CookieRestTemplate cookieRestTemplate;
+    private User user;
 
-     @Autowired
-     private User user;
+    public LoginController(CookieRestTemplate cookieRestTemplate, User user) {
+        this.cookieRestTemplate = cookieRestTemplate;
+        this.user = user;
+    }
 
     @FXML
     JFXTextField loginField;
@@ -51,9 +52,6 @@ public class LoginController {
     @FXML
     Label message;
 
-    @Autowired
-    CookieRestTemplate cookieRestTemplate;
-
     @FXML
     public void login(){
         // Wysyłam POST do serwera, aby uzyskać ciasteczko z danymi logowania
@@ -61,7 +59,7 @@ public class LoginController {
         String password = passwordField.getText();
 
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/login";
+        String url = ServerInfo.BASE_URL + "/login";
         MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
         map.add("username", username);
         map.add("password", password);
@@ -72,7 +70,7 @@ public class LoginController {
         cookieRestTemplate.setCookie(cookie);
         HttpEntity<String> res = new HttpEntity<>(username);
         try {
-            User fetcheduser = cookieRestTemplate.postForObject("http://localhost:8080/user/get", res, User.class);
+            User fetcheduser = cookieRestTemplate.postForObject(ServerInfo.USER_ENDPOINT + "/get", res, User.class);
             user.setId(fetcheduser.getId());
             user.setFirstName(fetcheduser.getFirstName());
             user.setLastName(fetcheduser.getLastName());
@@ -110,7 +108,6 @@ public class LoginController {
 
             clearFields();
         }
-
     }
 
     private void clearFields(){
@@ -120,6 +117,5 @@ public class LoginController {
 
     public void register(){
         stageManager.switchScene(ViewList.REGISTER);
-
     }
 }
