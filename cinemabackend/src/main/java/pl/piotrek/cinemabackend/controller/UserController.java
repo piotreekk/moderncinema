@@ -37,5 +37,10 @@ public class UserController {
             return userService.getAllEmployees();
     }
 
+    @GetMapping("/delete/{id}")
+    void delete(@PathVariable("id") Integer id){
+        userService.softDeleteUser(id);
+    }
+
 
 }

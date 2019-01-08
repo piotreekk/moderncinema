@@ -13,4 +13,6 @@ public interface UserService {
     List<User> getActiveEmployees();
 
     List<User> getAllEmployees();
+
+    void softDeleteUser(Integer id);
 }

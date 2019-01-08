@@ -34,5 +34,6 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         user.setPassword(encoder.encode("cinemaproject!@#"));
         userRepository.save(user);
+
     }
 }

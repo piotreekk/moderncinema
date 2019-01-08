@@ -2,10 +2,6 @@ package pl.piotrek.cinema.controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
-import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,9 +11,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.stage.StageStyle;
-import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -53,16 +46,16 @@ public class ManageAccountsController implements Initializable {
     private TableView<UserTableModel> table;
 
     @FXML
-    private TableColumn fnameCol;
+    private TableColumn<UserTableModel, String> fnameCol;
 
     @FXML
-    private TableColumn lnameCol;
+    private TableColumn<UserTableModel, String> lnameCol;
 
     @FXML
-    private TableColumn emailCol;
+    private TableColumn<UserTableModel, String> emailCol;
 
     @FXML
-    private TableColumn isActiveCol;
+    private TableColumn<UserTableModel, Boolean> isActiveCol;
 
     @FXML
     private AnchorPane headerPane;
@@ -87,7 +80,6 @@ public class ManageAccountsController implements Initializable {
 
         addEmployeeBtn.setOnAction(event -> newEmployee());
 
-        FadeTransition fadeTransition = new FadeTransition();
     }
 
     private void initTableConfig(){
@@ -104,10 +96,10 @@ public class ManageAccountsController implements Initializable {
             return row ;
         });
 
-        fnameCol.setCellValueFactory(new PropertyValueFactory<UserTableModel, String>("firstName"));
-        lnameCol.setCellValueFactory(new PropertyValueFactory<UserTableModel, String>("lastName"));
-        emailCol.setCellValueFactory(new PropertyValueFactory<UserTableModel, String>("email"));
-        isActiveCol.setCellValueFactory(new PropertyValueFactory<UserTableModel, Boolean>("active"));
+        fnameCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+        lnameCol.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
+        isActiveCol.setCellValueFactory(new PropertyValueFactory<>("active"));
     }
 
 

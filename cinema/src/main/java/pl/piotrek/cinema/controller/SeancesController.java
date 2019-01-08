@@ -94,8 +94,12 @@ public class SeancesController implements Initializable {
         });
     }
 
-    private void persistReservation(Seance seance, List<Integer> choosenSeats){
+    private void persistReservation(Seance seance, List<Integer> choosenSeats, boolean shouldSendMail){
         String url = ServerInfo.RESERVATION_ENDPOINT + "/add";
+        if(shouldSendMail)
+            url += "?mail=true";
+        else
+            url += "?mail=false";
         ReservationForm reservation = new ReservationForm();
         reservation.setSeanceId(seance.getId());
         reservation.setSeats(choosenSeats);
@@ -121,7 +125,15 @@ public class SeancesController implements Initializable {
 
             if(result.isPresent() && result.get() ==  ButtonType.OK){
                 choosenSeats = chooseSeatsController.getChoosenSeats();
-                persistReservation(seance, choosenSeats);
+                Alert success = new Alert(Alert.AlertType.CONFIRMATION, "Do you want send email with confirmation?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+                Optional<ButtonType> choice = success.showAndWait();
+                if(choice.isPresent()){
+                    if(choice.get() == ButtonType.YES)
+                        persistReservation(seance, choosenSeats, true);
+                    else if(choice.get() == ButtonType.NO)
+                        persistReservation(seance, choosenSeats, false);
+                }
+
             } else{
                 Alert failed = new Alert(Alert.AlertType.ERROR);
                 failed.setTitle("Errrororor");

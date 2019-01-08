@@ -24,9 +24,10 @@ public class ReservationController {
 
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    void addReservation(@RequestBody ReservationForm reservation){
+    void addReservation(@RequestBody ReservationForm reservation, @RequestParam("mail") boolean shouldSendMail){
         reservationService.addReservation(reservation);
-        reservationEmailServiceImpl.send(reservation);
+        if(shouldSendMail)
+            reservationEmailServiceImpl.send(reservation);
     }
 
     @GetMapping("/user/{id}")

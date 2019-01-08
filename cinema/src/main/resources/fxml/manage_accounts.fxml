@@ -9,7 +9,7 @@
 
 <AnchorPane prefHeight="768.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.piotrek.cinema.controller.ManageAccountsController">
    <children>
-      <AnchorPane fx:id="headerPane" prefHeight="62.0" prefWidth="800.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <AnchorPane fx:id="headerPane" prefHeight="60.0" prefWidth="800.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Label layoutX="28.0" layoutY="19.0" style="-fx-font-size: 20;" text="Employees Accounts" AnchorPane.leftAnchor="28.0" />
             <AnchorPane layoutX="413.0" layoutY="13.0" prefHeight="36.0" prefWidth="380.0" AnchorPane.rightAnchor="10.0">
@@ -20,7 +20,7 @@
             </AnchorPane>
          </children>
       </AnchorPane>
-      <TableView fx:id="table" layoutY="62.0" prefHeight="709.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <TableView fx:id="table" layoutY="62.0" prefHeight="709.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0">
         <columns>
           <TableColumn fx:id="fnameCol" prefWidth="184.0" text="First Name" />
           <TableColumn fx:id="lnameCol" prefWidth="195.0" text="Last Name" />

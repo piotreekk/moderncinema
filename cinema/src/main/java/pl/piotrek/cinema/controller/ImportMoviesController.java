@@ -26,7 +26,7 @@ import java.util.ResourceBundle;
 
 @Controller
 public class ImportMoviesController implements Initializable {
-    CookieRestTemplate cookieRestTemplate;
+    private CookieRestTemplate cookieRestTemplate;
 
     public ImportMoviesController(CookieRestTemplate cookieRestTemplate) {
         this.cookieRestTemplate = cookieRestTemplate;
@@ -36,19 +36,19 @@ public class ImportMoviesController implements Initializable {
     private TableView<MovieTableModel> table;
 
     @FXML
-    private TableColumn imageCol;
+    private TableColumn<MovieTableModel, ImageView> imageCol;
 
     @FXML
-    private TableColumn titleCol;
+    private TableColumn<MovieTableModel, String> titleCol;
 
     @FXML
-    private TableColumn overviewCol;
+    private TableColumn<MovieTableModel, Label> overviewCol;
 
     @FXML
-    private TableColumn dateCol;
+    private TableColumn<MovieTableModel, String> dateCol;
 
     @FXML
-    private ChoiceBox yearChoice;
+    private ChoiceBox<String> yearChoice;
 
     @FXML
     private JFXTextField keywordField;
@@ -125,10 +125,10 @@ public class ImportMoviesController implements Initializable {
 
     private void initTableConfig(){
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        imageCol.setCellValueFactory(new PropertyValueFactory<MovieTableModel, ImageView>("posterImage"));
-        titleCol.setCellValueFactory(new PropertyValueFactory<MovieTableModel, String>("title"));
-        overviewCol.setCellValueFactory(new PropertyValueFactory<MovieTableModel, Label>("overviewLabel"));
-        dateCol.setCellValueFactory(new PropertyValueFactory<MovieTableModel, String>("releaseDate"));
+        imageCol.setCellValueFactory(new PropertyValueFactory<>("posterImage"));
+        titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
+        overviewCol.setCellValueFactory(new PropertyValueFactory<>("overviewLabel"));
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("releaseDate"));
     }
 
     private void initChoiceBox(){

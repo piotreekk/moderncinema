@@ -3,8 +3,10 @@ package pl.piotrek.cinema.controller;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -64,9 +66,9 @@ public class UserHomeController implements Initializable {
             ImageView image = new ImageView(m.getPosterPath());
             card.getChildren().addAll(image, label);
             grid.setMargin(card, new Insets(10, 5, 0, 5));
+
             int row = rows%3;
             if(row == 0) grid.addRow(row);
-
             grid.add(card, n%5, n/5);
             n++;
         }
@@ -74,13 +76,11 @@ public class UserHomeController implements Initializable {
         contentPane.setContent(grid);
         contentPane.setFitToWidth(true);
         contentPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        AnchorPane.setTopAnchor(contentPane, 20.0);
+        AnchorPane.setTopAnchor(contentPane, 60.0);
         AnchorPane.setRightAnchor(contentPane, .0);
         AnchorPane.setLeftAnchor(contentPane, .0);
         AnchorPane.setBottomAnchor(contentPane, .0);
 
     }
-
-
 
 }

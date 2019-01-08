@@ -9,6 +9,7 @@ import pl.piotrek.cinema.config.SpringFXMLLoader;
 import java.io.IOException;
 import java.util.Objects;
 
+
 public class StageManager {
     private Stage primaryStage;
     private SpringFXMLLoader springFXMLLoader;

@@ -39,18 +39,18 @@ public class LoginController {
     }
 
     @FXML
-    JFXTextField loginField;
+    private JFXTextField loginField;
     @FXML
-    JFXPasswordField passwordField;
+    private JFXPasswordField passwordField;
 
     @FXML
-    JFXButton loginButton;
+    private JFXButton loginButton;
 
     @FXML
-    JFXButton registerButton;
+    private JFXButton registerButton;
 
     @FXML
-    Label message;
+    private Label message;
 
     @FXML
     public void login(){
@@ -79,20 +79,20 @@ public class LoginController {
             user.setRole(fetcheduser.getRole());
 
             stageManager.switchScene(ViewList.DASHBOARD);
-
-        } catch(HttpClientErrorException.Unauthorized e){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setResizable(true);
-            alert.setTitle("Access Denied!");
-            alert.setHeaderText("Authorization failed.");
-
-            Label alertMessage = new Label("Login and password don't match. Try another, or sign up.");
-            alertMessage.setWrapText(true);
-
-            alert.getDialogPane().setContent(alertMessage);
-            alert.showAndWait();
-
-            clearFields();
+//
+//        } catch(HttpClientErrorException.Unauthorized e){
+//            Alert alert = new Alert(Alert.AlertType.WARNING);
+//            alert.setResizable(true);
+//            alert.setTitle("Access Denied!");
+//            alert.setHeaderText("Authorization failed.");
+//
+//            Label alertMessage = new Label("Login and password don't match. Try another, or sign up.");
+//            alertMessage.setWrapText(true);
+//
+//            alert.getDialogPane().setContent(alertMessage);
+//            alert.showAndWait();
+//
+//            clearFields();
 
         } catch(HttpClientErrorException e){
             Alert alert = new Alert(Alert.AlertType.ERROR);

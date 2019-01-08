@@ -14,6 +14,7 @@ import javafx.scene.layout.GridPane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
@@ -29,8 +30,11 @@ import java.util.ResourceBundle;
 
 @Controller
 public class AuditoriumController implements Initializable{
-    @Autowired
-    CookieRestTemplate cookieRestTemplate;
+    private CookieRestTemplate cookieRestTemplate;
+
+    public AuditoriumController(CookieRestTemplate cookieRestTemplate) {
+        this.cookieRestTemplate = cookieRestTemplate;
+    }
 
     @FXML
     private TableColumn<AuditoriumTableModel, String> nameCol;
@@ -40,13 +44,6 @@ public class AuditoriumController implements Initializable{
 
     @FXML
     private TableColumn<AuditoriumTableModel, Integer> seatsCountCol;
-
-
-    @FXML
-    private TableColumn<AuditoriumTableModel, MaterialDesignIconView> deleteCol;
-
-    @FXML
-    private TableColumn<AuditoriumTableModel, MaterialDesignIconView>  updateCol;
 
     @FXML
     private JFXTextField nameInput;
@@ -63,15 +60,14 @@ public class AuditoriumController implements Initializable{
     @FXML
     private TableView<AuditoriumTableModel> table;
 
-    ObservableList<AuditoriumTableModel> auditories;
+    private ObservableList<AuditoriumTableModel> auditories;
 
-    ContextMenu menu;
+    private ContextMenu menu;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initTableConfig();
         loadDataFromAPI();
-        table.setItems(auditories);
         button.setOnAction(event -> addAuditorium());
     }
 
@@ -85,6 +81,7 @@ public class AuditoriumController implements Initializable{
             auditoriesArrayList.add(new AuditoriumTableModel(a));
 
         auditories = FXCollections.observableArrayList(auditoriesArrayList);
+        table.setItems(auditories);
     }
 
     private void addAuditorium(){
@@ -97,7 +94,10 @@ public class AuditoriumController implements Initializable{
         map.add("name", name);
         map.add("rows", rows);
         map.add("cols", cols);
-        ResponseEntity<String> stringResponseEntity = cookieRestTemplate.postForEntity(url, map, String.class);
+        ResponseEntity<String> response = cookieRestTemplate.postForEntity(url, map, String.class);
+        if(response.getStatusCode() == HttpStatus.CREATED){
+            loadDataFromAPI();
+        }
     }
 
     private void updateAuditorium(Auditorium auditorium){
@@ -129,6 +129,7 @@ public class AuditoriumController implements Initializable{
     private void performUpdate(Auditorium auditorium){
         String url = ServerInfo.AUDITORIUM_ENDPOINT + "/update/" + auditorium.getId() + "?name={name}&rows={rows}&cols={cols}";
         cookieRestTemplate.put(url, null, auditorium.getName(), auditorium.getRows(), auditorium.getCols());
+        loadDataFromAPI();
     }
 
     private void initTableConfig(){
@@ -157,5 +158,4 @@ public class AuditoriumController implements Initializable{
         menu = new ContextMenu(mi1);
         menu.show(table, x_pos, y_pos);
     }
-
 }

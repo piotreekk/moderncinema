@@ -39,22 +39,22 @@ public class ReservationController implements Initializable {
     private AnchorPane headerPane;
 
     @FXML
-    private TableColumn titleCol;
+    private TableColumn<ReservationTableModel, String> titleCol;
 
     @FXML
-    private TableColumn dateCol;
+    private TableColumn<ReservationTableModel, LocalDate> dateCol;
 
     @FXML
-    private TableColumn timeCol;
+    private TableColumn<ReservationTableModel, LocalTime> timeCol;
 
     @FXML
-    private TableColumn auditoriumCol;
+    private TableColumn<ReservationTableModel, String> auditoriumCol;
 
     @FXML
-    private TableColumn seatsCol;
+    private TableColumn<ReservationTableModel, String> seatsCol;
 
     @FXML
-    private TableView table;
+    private TableView<ReservationTableModel> table;
 
     private ObservableList<ReservationTableModel> reservations;
 
@@ -87,11 +87,11 @@ public class ReservationController implements Initializable {
 
     private void initTableConfig(){
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        titleCol.setCellValueFactory(new PropertyValueFactory<ReservationTableModel, String>("movieTitle"));
-        dateCol.setCellValueFactory(new PropertyValueFactory<ReservationTableModel, LocalDate>("date"));
-        timeCol.setCellValueFactory(new PropertyValueFactory<ReservationTableModel, LocalTime>("startTime"));
-        auditoriumCol.setCellValueFactory(new PropertyValueFactory<ReservationTableModel, String>("auditorium"));
-        seatsCol.setCellValueFactory(new PropertyValueFactory<ReservationTableModel, String>("seats"));
+        titleCol.setCellValueFactory(new PropertyValueFactory<>("movieTitle"));
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
+        timeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        auditoriumCol.setCellValueFactory(new PropertyValueFactory<>("auditorium"));
+        seatsCol.setCellValueFactory(new PropertyValueFactory<>("seats"));
     }
 
 }

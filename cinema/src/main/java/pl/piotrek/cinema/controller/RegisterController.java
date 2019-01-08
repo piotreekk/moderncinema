@@ -57,7 +57,6 @@ public class RegisterController implements Initializable {
 
     @FXML
     void register(){
-
         User user = new User();
         user.setFirstName(firstName.getText());
         user.setLastName(lastName.getText());

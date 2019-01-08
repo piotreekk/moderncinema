@@ -25,8 +25,11 @@ import java.util.List;
 
 @Controller
 public class ChooseSeatsController{
-    @Autowired
-    CookieRestTemplate cookieRestTemplate;
+    private CookieRestTemplate cookieRestTemplate;
+
+    public ChooseSeatsController(CookieRestTemplate cookieRestTemplate) {
+        this.cookieRestTemplate = cookieRestTemplate;
+    }
 
     @FXML
     private AnchorPane container;
@@ -83,7 +86,6 @@ public class ChooseSeatsController{
 
         grid.addRow(rows);
         grid.addRow(rows+1);
-        grid.setGridLinesVisible(true);
 
         // Ekran
         JFXButton btn = new JFXButton();

@@ -32,12 +32,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getActiveEmployees() {
-        return userRepository.findAllByEnabledTrue();
+        return userRepository.findAllByRoleAndEnabledTrue("admin");
     }
 
     @Override
     public List<User> getAllEmployees() {
-        return (List) userRepository.findAll();
+        return userRepository.findAllByRole("admin");
     }
 
+    @Override
+    public void softDeleteUser(Integer id) {
+        User user = userRepository.findById(id).get();
+        user.setEnabled(false);
+        userRepository.save(user);
+    }
 }

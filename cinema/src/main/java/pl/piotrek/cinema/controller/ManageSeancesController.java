@@ -14,7 +14,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.StringConverter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -37,27 +36,29 @@ import java.util.ResourceBundle;
 
 @Controller
 public class ManageSeancesController implements Initializable {
+    private CookieRestTemplate cookieRestTemplate;
 
-    @Autowired
-    CookieRestTemplate cookieRestTemplate;
-
-    @FXML
-    private TableView table;
-
-    @FXML
-    private TableColumn dateCol;
+    public ManageSeancesController(CookieRestTemplate cookieRestTemplate) {
+        this.cookieRestTemplate = cookieRestTemplate;
+    }
 
     @FXML
-    private TableColumn timeCol;
+    private TableView<SeanceTableModel> table;
 
     @FXML
-    private TableColumn movieCol;
+    private TableColumn<SeanceTableModel, LocalDate> dateCol;
 
     @FXML
-    private TableColumn freeSeatsCol;
+    private TableColumn<SeanceTableModel, LocalTime> timeCol;
 
     @FXML
-    private TableColumn allSeatsCol;
+    private TableColumn<SeanceTableModel, String> movieCol;
+
+    @FXML
+    private TableColumn<SeanceTableModel, String> freeSeatsCol;
+
+    @FXML
+    private TableColumn<SeanceTableModel, String> allSeatsCol;
 
     @FXML
     private JFXDatePicker dateInput;
@@ -65,10 +66,8 @@ public class ManageSeancesController implements Initializable {
     @FXML
     private ChoiceBox<Movie> movieChoice;
 
-
     @FXML
     private ChoiceBox<Auditorium> auditoriumChoice;
-
 
     @FXML
     private JFXTextField seatsInput;
@@ -90,41 +89,8 @@ public class ManageSeancesController implements Initializable {
         table.setItems(seances);
 
         addSeanceBtn.setOnAction(event -> {
-            Movie movie = movieChoice.getSelectionModel().getSelectedItem();
-            LocalDate date = dateInput.getValue();
-            LocalTime time = timeInput.getValue();
-            Auditorium auditorium = auditoriumChoice.getSelectionModel().getSelectedItem();
-
-            SeanceForm seance = new SeanceForm();
-            seance.setMovieId(movie.getId());
-            seance.setAuditoriumId(auditorium.getId());
-            seance.setDate(date);
-            seance.setStartTime(time);
-
-            // TODO
-            // Przed dodaniem seansu trzeba bedzie sprawdzic czy w danej sali nie odbywał się od 3h inny seans. Nie mam
-            // w api bezposredniego pola o trwaniu seansu, wiec trzeba zrobic dluzsza przerwe
-            String url = ServerInfo.SEANCE_ENDPOINT + "/add";
-            try {
-                ResponseEntity<Seance> response = cookieRestTemplate.postForEntity(url, seance, Seance.class);
-
-                if (response.getStatusCode().equals(HttpStatus.CREATED)) {
-                    Seance newSeance = response.getBody();
-                    seances.addAll(new SeanceTableModel(newSeance));
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setContentText("Error occured while adding new senace!");
-                    alert.showAndWait();
-
-                }
-            } catch (RestClientException ex){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setContentText("Server not responding!");
-                alert.showAndWait();
-            }
-
+            SeanceForm seance = prepareSeance();
+            persistSeance(seance);
         });
     }
 
@@ -142,13 +108,53 @@ public class ManageSeancesController implements Initializable {
         seances = FXCollections.observableArrayList(seancesArrayList);
     }
 
+    private SeanceForm prepareSeance(){
+        Movie movie = movieChoice.getSelectionModel().getSelectedItem();
+        LocalDate date = dateInput.getValue();
+        LocalTime time = timeInput.getValue();
+        Auditorium auditorium = auditoriumChoice.getSelectionModel().getSelectedItem();
+
+        SeanceForm seance = new SeanceForm();
+        seance.setMovieId(movie.getId());
+        seance.setAuditoriumId(auditorium.getId());
+        seance.setDate(date);
+        seance.setStartTime(time);
+
+        return seance;
+    }
+
+    private void persistSeance(SeanceForm seance){
+        // TODO
+        // Przed dodaniem seansu trzeba bedzie sprawdzic czy w danej sali nie odbywał się od 3h inny seans. Nie mam
+        // w api bezposredniego pola o trwaniu seansu, wiec trzeba zrobic dluzsza przerwe
+        String url = ServerInfo.SEANCE_ENDPOINT + "/add";
+        try {
+            ResponseEntity<Seance> response = cookieRestTemplate.postForEntity(url, seance, Seance.class);
+
+            if (response.getStatusCode().equals(HttpStatus.CREATED)) {
+                Seance newSeance = response.getBody();
+                seances.addAll(new SeanceTableModel(newSeance));
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setContentText("Error occured while adding new senace!");
+                alert.showAndWait();
+            }
+        } catch (RestClientException ex){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("Server not responding!");
+            alert.showAndWait();
+        }
+    }
+
     private void initTableConfig(){
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        dateCol.setCellValueFactory(new PropertyValueFactory<SeanceTableModel, LocalDate>("date"));
-        timeCol.setCellValueFactory(new PropertyValueFactory<SeanceTableModel, LocalTime>("startTime"));
-        movieCol.setCellValueFactory(new PropertyValueFactory<SeanceTableModel, String>("movieTitle"));
-        freeSeatsCol.setCellValueFactory(new PropertyValueFactory<SeanceTableModel, String>("freeSeatsCount"));
-        allSeatsCol.setCellValueFactory(new PropertyValueFactory<SeanceTableModel, String>("allSeatsCount"));
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
+        timeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        movieCol.setCellValueFactory(new PropertyValueFactory<>("movieTitle"));
+        freeSeatsCol.setCellValueFactory(new PropertyValueFactory<>("freeSeatsCount"));
+        allSeatsCol.setCellValueFactory(new PropertyValueFactory<>("allSeatsCount"));
     }
 
     private void initMoviesChoice(){
