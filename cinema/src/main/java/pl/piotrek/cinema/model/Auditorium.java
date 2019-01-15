@@ -2,9 +2,9 @@ package pl.piotrek.cinema.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Auditorium {
 

@@ -1,4 +1,4 @@
-package pl.piotrek.cinemabackend.forms;
+package pl.piotrek.cinema.api.forms;
 
 
 import java.util.List;

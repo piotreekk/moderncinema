@@ -2,6 +2,7 @@ package pl.piotrek.cinema.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,6 +22,14 @@ public class Seance {
 
     public void setAuditorium(Auditorium auditorium) {
         this.auditorium = auditorium;
+    }
+
+    public void setEverything(Seance seance){
+        this.id = seance.id;
+        this.movie = seance.movie;
+        this.startTime = seance.startTime;
+        this.date = seance.date;
+        this.auditorium = seance.auditorium;
     }
 
     @Override

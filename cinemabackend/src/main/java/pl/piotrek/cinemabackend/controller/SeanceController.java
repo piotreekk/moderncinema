@@ -1,11 +1,10 @@
 package pl.piotrek.cinemabackend.controller;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import pl.piotrek.cinemabackend.forms.SeanceForm;
+import pl.piotrek.cinema.api.forms.SeanceForm;
 import pl.piotrek.cinemabackend.model.Seance;
 import pl.piotrek.cinemabackend.model.Seat;
 import pl.piotrek.cinemabackend.service.SeanceService;

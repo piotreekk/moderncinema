@@ -2,7 +2,7 @@ package pl.piotrek.cinemabackend.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.piotrek.cinemabackend.forms.ReservationForm;
+import pl.piotrek.cinema.api.forms.ReservationForm;
 import pl.piotrek.cinemabackend.model.*;
 import pl.piotrek.cinemabackend.repository.ReservationRepository;
 import pl.piotrek.cinemabackend.repository.SeanceRepository;
@@ -40,7 +40,7 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setUser(user);
 
         List<ReservedSeat> seats = new ArrayList<>();
-        for(Integer seatId : reservationForm.getSeats()){
+        for (Integer seatId : reservationForm.getSeats()) {
             Seat seat = seatRepository.findById(seatId).get();
             ReservedSeat reservedSeat = new ReservedSeat();
             reservedSeat.setSeat(seat);
@@ -59,9 +59,9 @@ public class ReservationServiceImpl implements ReservationService {
         StringBuilder builder = new StringBuilder();
         Seance seance = seanceRepository.findById(reservationForm.getSeanceId()).get();
         User user = userRepository.findById(reservationForm.getUserId()).get();
-        List<Seat> seats = (List<Seat>)seatRepository.findAllById(reservationForm.getSeats());
+        List<Seat> seats = (List<Seat>) seatRepository.findAllById(reservationForm.getSeats());
         StringBuilder seatsbuilder = new StringBuilder();
-        for(Seat s : seats)
+        for (Seat s : seats)
             seatsbuilder.append(s.getRow()).append(" ").append(s.getNumber()).append(",");
 
         builder
@@ -86,10 +86,10 @@ public class ReservationServiceImpl implements ReservationService {
     public List<String> getUserReservations(Integer id) {
         List<Reservation> reservations = reservationRepository.findAllByUserId(id);
         List<String> result = new ArrayList<>();
-        for(Reservation r : reservations){
+        for (Reservation r : reservations) {
             // Wiem ze to co robię niżej jest bardzo dziwne, ale juz nie kombinuje. Nowy projekt będzie lepszy
             StringBuilder seatsbuilder = new StringBuilder();
-            for(ReservedSeat s : r.getReservedSeats())
+            for (ReservedSeat s : r.getReservedSeats())
                 seatsbuilder.append(s.getSeat().getRow()).append(" ").append(s.getSeat().getNumber()).append(",");
 
             String details = new StringBuilder()

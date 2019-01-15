@@ -3,7 +3,7 @@ package pl.piotrek.cinemabackend.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import pl.piotrek.cinemabackend.forms.ReservationForm;
+import pl.piotrek.cinema.api.forms.ReservationForm;
 import pl.piotrek.cinemabackend.service.ReservationService;
 import pl.piotrek.cinemabackend.service.impl.ReservationEmailServiceImpl;
 

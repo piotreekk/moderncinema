@@ -14,9 +14,9 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import pl.piotrek.cinema.api.forms.ReservationForm;
 import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.config.SpringFXMLLoader;
-import pl.piotrek.cinema.model.ReservationForm;
 import pl.piotrek.cinema.model.Seance;
 import pl.piotrek.cinema.model.User;
 import pl.piotrek.cinema.model.table.SeanceTableModel;
@@ -109,13 +109,12 @@ public class SeancesController implements Initializable {
 
     private void completeReservation(){
         Seance seance = table.getSelectionModel().getSelectedItem().getSeance();
+        chooseSeatsController.setSeance(seance);
         List<Integer> choosenSeats;
         AnchorPane pane = new AnchorPane();
         try {
             Parent viewNode = springFXMLLoader.load(ViewList.CHOOSE_SEATS.getFxmlPath());
             pane.getChildren().setAll(viewNode);
-
-            chooseSeatsController.init(seance);
 
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setHeaderText(null);

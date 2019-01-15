@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import pl.piotrek.cinemabackend.forms.ReservationForm;
+import pl.piotrek.cinema.api.forms.ReservationForm;
 import pl.piotrek.cinemabackend.service.EmailSender;
 import pl.piotrek.cinemabackend.service.ReservationEmailService;
 import pl.piotrek.cinemabackend.service.ReservationService;

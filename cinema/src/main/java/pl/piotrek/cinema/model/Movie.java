@@ -9,7 +9,6 @@ public class Movie {
     private String overview;
     private String releaseDate;
     private String posterPath;
-//    private List<Seance> seance = new ArrayList<>();
 
     public Movie(int id, String title, String overview, String releaseDate, String posterPath) {
         this.id = id;

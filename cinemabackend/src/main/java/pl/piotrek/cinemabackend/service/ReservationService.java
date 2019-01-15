@@ -1,6 +1,6 @@
 package pl.piotrek.cinemabackend.service;
 
-import pl.piotrek.cinemabackend.forms.ReservationForm;
+import pl.piotrek.cinema.api.forms.ReservationForm;
 import pl.piotrek.cinemabackend.model.Reservation;
 
 import java.util.List;

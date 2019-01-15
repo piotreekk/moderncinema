@@ -2,7 +2,7 @@ package pl.piotrek.cinemabackend.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.piotrek.cinemabackend.forms.SeanceForm;
+import pl.piotrek.cinema.api.forms.SeanceForm;
 import pl.piotrek.cinemabackend.model.Seance;
 import pl.piotrek.cinemabackend.model.Seat;
 import pl.piotrek.cinemabackend.repository.AuditoriumRepository;

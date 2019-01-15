@@ -2,6 +2,7 @@ package pl.piotrek.cinema.controller;
 
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -10,6 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +22,15 @@ import pl.piotrek.cinema.model.Seance;
 import pl.piotrek.cinema.model.Seat;
 import pl.piotrek.cinema.util.CookieRestTemplate;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @Controller
-public class ChooseSeatsController{
+public class ChooseSeatsController implements Initializable {
     private CookieRestTemplate cookieRestTemplate;
+    private Seance seance;
 
     public ChooseSeatsController(CookieRestTemplate cookieRestTemplate) {
         this.cookieRestTemplate = cookieRestTemplate;
@@ -40,7 +45,13 @@ public class ChooseSeatsController{
         return choosenSeats;
     }
 
-    public void init(Seance seance) {
+    public void setSeance(Seance seance){
+        this.seance = seance;
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        System.out.println(seance);
         String url = ServerInfo.SEANCE_ENDPOINT + "/" + seance.getId() + "/seats/taken";
         ResponseEntity<ArrayList<Seat>> response = cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<ArrayList<Seat>>() { });
         ArrayList<Seat> takenSeats = response.getBody();
@@ -106,4 +117,8 @@ public class ChooseSeatsController{
 
         container.getChildren().addAll(grid);
     }
+
+
+
+
 }

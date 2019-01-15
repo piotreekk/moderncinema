@@ -14,7 +14,7 @@ import java.io.IOException;
 public class AppJavaConfig {
 	
     @Autowired
-    SpringFXMLLoader springFXMLLoader;
+    private SpringFXMLLoader springFXMLLoader;
 
     @Bean
     // Musi byc lazy, bo w czasie uruchamiania springboota nie ma zarejestrowanego beana Stage

@@ -1,6 +1,6 @@
 package pl.piotrek.cinemabackend.service;
 
-import pl.piotrek.cinemabackend.forms.SeanceForm;
+import pl.piotrek.cinema.api.forms.SeanceForm;
 import pl.piotrek.cinemabackend.model.Seance;
 import pl.piotrek.cinemabackend.model.Seat;
 
