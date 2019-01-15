@@ -1,5 +1,5 @@
 package pl.piotrek.cinema.model;
-
+// TODO: DO WYNIESIENIA DO MODUŁU API, PAKIETU DTO
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.stereotype.Component;

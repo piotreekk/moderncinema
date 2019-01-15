@@ -8,7 +8,7 @@ import pl.piotrek.cinema.model.Seance;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-;
+// TODO: W TYCH MODELACH TEZ TRZEBA WPROWADZIC DUZO ZMIAN. W KONTROLERZE NIE BEDZIE TRZYMANA LISTA OBIEKTOW, TYLKO W TYM OBIEKCIE. JEGO LOGIKA TAKZE
 
 public class SeanceTableModel{
     private Seance seance;

@@ -1,6 +1,8 @@
 package pl.piotrek.cinema.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+// TODO: DO WYNIESIENIA DO MODUŁU API, PAKIETU DTO
+
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Movie {

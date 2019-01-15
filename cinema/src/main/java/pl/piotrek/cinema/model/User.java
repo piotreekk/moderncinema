@@ -3,6 +3,8 @@ package pl.piotrek.cinema.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.stereotype.Component;
 
+// TODO: DO WYNIESIENIA DO MODUŁU API, PAKIETU DTO, A TUTAJ ZACHOWANIE KOMPONENTU USER, KTÓRY DOSTARCZY MI JAKIES FUNKCJONALNOSCI
+
 @Component
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
