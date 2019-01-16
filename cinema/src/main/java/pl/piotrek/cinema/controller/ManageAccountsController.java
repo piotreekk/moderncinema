@@ -19,7 +19,7 @@ import org.springframework.stereotype.Controller;
 import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.config.SpringFXMLLoader;
 import pl.piotrek.cinema.model.User;
-import pl.piotrek.cinema.model.table.UserTableModel;
+import pl.piotrek.cinema.model.UserTableModel;
 import pl.piotrek.cinema.util.CookieRestTemplate;
 import pl.piotrek.cinema.view.ViewList;
 

@@ -15,8 +15,8 @@ import javafx.scene.text.Text;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import pl.piotrek.cinema.config.ServerInfo;
-import pl.piotrek.cinema.model.Movie;
-import pl.piotrek.cinema.model.table.MovieTableModel;
+import pl.piotrek.cinema.api.dto.MovieDTO;
+import pl.piotrek.cinema.model.MovieTableModel;
 import pl.piotrek.cinema.util.CookieRestTemplate;
 
 import java.io.IOException;
@@ -139,8 +139,8 @@ public class ImportMoviesController implements Initializable {
 
     private void addMovie(MovieTableModel movie){
         String url = ServerInfo.MOVIE_ENDPOINT + "/add";
-        Movie request = new Movie(movie.getId(), movie.getTitle(), movie.getOverview(), movie.getReleaseDate(), movie.getPosterPath());
-        ResponseEntity<Movie> response = cookieRestTemplate.postForEntity(url, request, Movie.class);
+        MovieDTO request = new MovieDTO(movie.getId(), movie.getTitle(), movie.getOverview(), movie.getReleaseDate(), movie.getPosterPath());
+        ResponseEntity<MovieDTO> response = cookieRestTemplate.postForEntity(url, request, MovieDTO.class);
         System.out.println(response);
 
         //TODO zmienic tak, aby uzywac kodu 201 Created i wyswietlic wiadomosc ze udalo sie stworzyc, lub inny kiedy sie nie udalo

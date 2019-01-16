@@ -84,7 +84,7 @@ public enum ViewList {
     AUDITORIUM{
         @Override
         public String getTitle() {
-            return "Auditorium";
+            return "AuditoriumDTO";
         }
 
         @Override

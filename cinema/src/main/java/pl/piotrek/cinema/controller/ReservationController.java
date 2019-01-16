@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.model.User;
-import pl.piotrek.cinema.model.table.ReservationTableModel;
+import pl.piotrek.cinema.model.ReservationTableModel;
 import pl.piotrek.cinema.util.CookieRestTemplate;
 
 import java.net.URL;
@@ -90,8 +90,8 @@ public class ReservationController implements Initializable {
         titleCol.setCellValueFactory(new PropertyValueFactory<>("movieTitle"));
         dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
         timeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
-        auditoriumCol.setCellValueFactory(new PropertyValueFactory<>("auditorium"));
-        seatsCol.setCellValueFactory(new PropertyValueFactory<>("seats"));
+        auditoriumCol.setCellValueFactory(new PropertyValueFactory<>("auditoriumDTO"));
+        seatsCol.setCellValueFactory(new PropertyValueFactory<>("seatDTOS"));
     }
 
 }

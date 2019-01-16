@@ -1,10 +1,13 @@
 package pl.piotrek.cinemabackend.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
+@Data
 @Entity
 @Table(name = "Movie")
 public class Movie {
@@ -18,59 +21,9 @@ public class Movie {
     private String posterPath;
 
     // umozliwi mi to wybranie filmu i pokazanie jego wszystkich seansow ?
-
-//    @JsonIgnore prawdopodobnie sie przyda aby uniknac petli nieskonczonej dla Jacksona
+    @JsonIgnore
     @OneToMany(mappedBy = "movie")
-    private List<Seance> seance = new ArrayList<>();
+    private List<Seance> seance;
 
-    @Override
-    public String toString() {
-        return "Movie{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", overview='" + overview + '\'' +
-                ", releaseDate='" + releaseDate + '\'' +
-                ", posterPath='" + posterPath + '\'' +
-                '}';
-    }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getOverview() {
-        return overview;
-    }
-
-    public void setOverview(String overview) {
-        this.overview = overview;
-    }
-
-    public String getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public String getPosterPath() {
-        return posterPath;
-    }
-
-    public void setPosterPath(String posterPath) {
-        this.posterPath = posterPath;
-    }
 }

@@ -2,10 +2,12 @@ package pl.piotrek.cinemabackend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.util.List;
 
+@Data
 @Entity
 public class Auditorium {
 
@@ -25,53 +27,4 @@ public class Auditorium {
     @OneToMany(mappedBy = "auditorium", cascade = CascadeType.ALL)
     private List<Seat> seats;
 
-
-
-    public List<Seance> getSeances() {
-        return seances;
-    }
-
-    public void setSeances(List<Seance> seances) {
-        this.seances = seances;
-    }
-
-    public Integer getRows() {
-        return rows;
-    }
-
-    public void setRows(Integer rows) {
-        this.rows = rows;
-    }
-
-    public Integer getCols() {
-        return cols;
-    }
-
-    public void setCols(Integer cols) {
-        this.cols = cols;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Seat> getSeats() {
-        return seats;
-    }
-
-    public void setSeats(List<Seat> seats) {
-        this.seats = seats;
-    }
 }

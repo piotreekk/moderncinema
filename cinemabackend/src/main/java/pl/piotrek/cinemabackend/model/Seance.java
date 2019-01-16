@@ -3,12 +3,14 @@ package pl.piotrek.cinemabackend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+@Data
 @Entity
 @Table(name = "Seance")
 public class Seance {
@@ -17,7 +19,7 @@ public class Seance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne(fetch = FetchType.EAGER) // domyslny
+    @ManyToOne
     @JoinColumn(name = "movie_id")
     private Movie movie;
 
@@ -30,56 +32,8 @@ public class Seance {
     @JoinColumn(name = "auditorium_id")
     private Auditorium auditorium;
 
-    // EDIT: probuje:
     @JsonIgnore
     @OneToMany(mappedBy = "seance")
     private List<ReservedSeat> reservedSeats;
 
-    public List<ReservedSeat> getReservedSeats() {
-        return reservedSeats;
-    }
-
-    public void setReservedSeats(List<ReservedSeat> reservedSeats) {
-        this.reservedSeats = reservedSeats;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Movie getMovie() {
-        return movie;
-    }
-
-    public void setMovie(Movie movie) {
-        this.movie = movie;
-    }
-
-    public LocalTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public Auditorium getAuditorium() {
-        return auditorium;
-    }
-
-    public void setAuditorium(Auditorium auditorium) {
-        this.auditorium = auditorium;
-    }
 }

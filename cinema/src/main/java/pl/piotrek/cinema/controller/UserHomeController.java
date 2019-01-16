@@ -3,10 +3,8 @@ package pl.piotrek.cinema.controller;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -18,7 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import pl.piotrek.cinema.config.ServerInfo;
-import pl.piotrek.cinema.model.Movie;
+import pl.piotrek.cinema.api.dto.MovieDTO;
 import pl.piotrek.cinema.util.CookieRestTemplate;
 
 import java.net.URL;
@@ -48,7 +46,7 @@ public class UserHomeController implements Initializable {
 
     private void initContent(){
         String url = ServerInfo.MOVIE_ENDPOINT + "/get/all";
-        ResponseEntity<List<Movie> > response = cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Movie>>(){});
+        ResponseEntity<List<MovieDTO> > response = cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<MovieDTO>>(){});
         if(response.getStatusCode() != HttpStatus.OK) return;
 
         GridPane grid = new GridPane();
@@ -58,7 +56,7 @@ public class UserHomeController implements Initializable {
         for(int i=0; i<5; ++i) grid.addColumn(i);
 
         int n = 0;
-        for(Movie m : response.getBody()) {
+        for(MovieDTO m : response.getBody()) {
             VBox card = new VBox();
             Label label = new Label(m.getTitle());
             label.setWrapText(true);

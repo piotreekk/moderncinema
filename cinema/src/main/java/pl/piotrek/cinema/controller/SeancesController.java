@@ -17,9 +17,9 @@ import org.springframework.stereotype.Controller;
 import pl.piotrek.cinema.api.forms.ReservationForm;
 import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.config.SpringFXMLLoader;
-import pl.piotrek.cinema.model.Seance;
+import pl.piotrek.cinema.api.dto.SeanceDTO;
 import pl.piotrek.cinema.model.User;
-import pl.piotrek.cinema.model.table.SeanceTableModel;
+import pl.piotrek.cinema.model.SeanceTableModel;
 import pl.piotrek.cinema.util.CookieRestTemplate;
 import pl.piotrek.cinema.view.ViewList;
 
@@ -94,22 +94,22 @@ public class SeancesController implements Initializable {
         });
     }
 
-    private void persistReservation(Seance seance, List<Integer> choosenSeats, boolean shouldSendMail){
+    private void persistReservation(SeanceDTO seanceDTO, List<Integer> choosenSeats, boolean shouldSendMail){
         String url = ServerInfo.RESERVATION_ENDPOINT + "/add";
         if(shouldSendMail)
             url += "?mail=true";
         else
             url += "?mail=false";
         ReservationForm reservation = new ReservationForm();
-        reservation.setSeanceId(seance.getId());
+        reservation.setSeanceId(seanceDTO.getId());
         reservation.setSeats(choosenSeats);
         reservation.setUserId(user.getId());
         cookieRestTemplate.postForEntity(url, reservation, ReservationForm.class);
     }
 
     private void completeReservation(){
-        Seance seance = table.getSelectionModel().getSelectedItem().getSeance();
-        chooseSeatsController.setSeance(seance);
+        SeanceDTO seanceDTO = table.getSelectionModel().getSelectedItem().getSeanceDTO();
+        chooseSeatsController.setSeanceDTO(seanceDTO);
         List<Integer> choosenSeats;
         AnchorPane pane = new AnchorPane();
         try {
@@ -128,9 +128,9 @@ public class SeancesController implements Initializable {
                 Optional<ButtonType> choice = success.showAndWait();
                 if(choice.isPresent()){
                     if(choice.get() == ButtonType.YES)
-                        persistReservation(seance, choosenSeats, true);
+                        persistReservation(seanceDTO, choosenSeats, true);
                     else if(choice.get() == ButtonType.NO)
-                        persistReservation(seance, choosenSeats, false);
+                        persistReservation(seanceDTO, choosenSeats, false);
                 }
 
             } else{
@@ -155,13 +155,13 @@ public class SeancesController implements Initializable {
 
     private void loadDataFromAPI(LocalDate date){
         String url = ServerInfo.SEANCE_ENDPOINT + "/get/bydate/{date}";
-        ResponseEntity<ArrayList<Seance>> response =
-                cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<ArrayList<Seance>>(){}, date);
+        ResponseEntity<ArrayList<SeanceDTO>> response =
+                cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<ArrayList<SeanceDTO>>(){}, date);
 
-        ArrayList<Seance> responseList = response.getBody();
+        ArrayList<SeanceDTO> responseList = response.getBody();
         ArrayList<SeanceTableModel> seancesArrayList = new ArrayList<>();
 
-        for(Seance s : responseList)
+        for(SeanceDTO s : responseList)
             seancesArrayList.add(new SeanceTableModel(s));
 
         seances = FXCollections.observableArrayList(seancesArrayList);

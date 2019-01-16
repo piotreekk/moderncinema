@@ -1,11 +1,11 @@
-package pl.piotrek.cinema.model.table;
+package pl.piotrek.cinema.model;
 
 // TODO: W TYCH MODELACH TEZ TRZEBA WPROWADZIC DUZO ZMIAN. W KONTROLERZE NIE BEDZIE TRZYMANA LISTA OBIEKTOW, TYLKO W TYM OBIEKCIE. JEGO LOGIKA TAKZE
 
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.beans.property.*;
-import pl.piotrek.cinema.model.Auditorium;
+import pl.piotrek.cinema.api.dto.AuditoriumDTO;
 
 public class AuditoriumTableModel {
 
@@ -15,13 +15,13 @@ public class AuditoriumTableModel {
     private ObjectProperty<MaterialDesignIconView> update;
     private ObjectProperty<MaterialDesignIconView> delete;
 
-    private Auditorium auditorium;
+    private AuditoriumDTO auditoriumDTO;
 
-    public AuditoriumTableModel(Auditorium auditorium) {
-        this(auditorium.getName(), auditorium.getRows(),auditorium.getCols()*auditorium.getRows());
-        this.auditorium = auditorium;
-        delete.get().setId(Integer.toString(auditorium.getId()));
-        update.get().setId(Integer.toString(auditorium.getId()));
+    public AuditoriumTableModel(AuditoriumDTO auditoriumDTO) {
+        this(auditoriumDTO.getName(), auditoriumDTO.getRows(), auditoriumDTO.getCols()* auditoriumDTO.getRows());
+        this.auditoriumDTO = auditoriumDTO;
+        delete.get().setId(Integer.toString(auditoriumDTO.getId()));
+        update.get().setId(Integer.toString(auditoriumDTO.getId()));
     }
 
     public AuditoriumTableModel(String name, Integer rows, Integer seatsCount) {
@@ -96,8 +96,8 @@ public class AuditoriumTableModel {
         this.delete.set(delete);
     }
 
-    public Auditorium getAuditorium() {
-        return auditorium;
+    public AuditoriumDTO getAuditoriumDTO() {
+        return auditoriumDTO;
     }
 
 }

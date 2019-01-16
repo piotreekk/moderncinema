@@ -10,16 +10,14 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import pl.piotrek.cinema.config.ServerInfo;
-import pl.piotrek.cinema.model.Auditorium;
-import pl.piotrek.cinema.model.Seance;
-import pl.piotrek.cinema.model.Seat;
+import pl.piotrek.cinema.api.dto.AuditoriumDTO;
+import pl.piotrek.cinema.api.dto.SeanceDTO;
+import pl.piotrek.cinema.api.dto.SeatDTO;
 import pl.piotrek.cinema.util.CookieRestTemplate;
 
 import java.net.URL;
@@ -30,7 +28,7 @@ import java.util.ResourceBundle;
 @Controller
 public class ChooseSeatsController implements Initializable {
     private CookieRestTemplate cookieRestTemplate;
-    private Seance seance;
+    private SeanceDTO seanceDTO;
 
     public ChooseSeatsController(CookieRestTemplate cookieRestTemplate) {
         this.cookieRestTemplate = cookieRestTemplate;
@@ -38,45 +36,44 @@ public class ChooseSeatsController implements Initializable {
 
     @FXML
     private AnchorPane container;
-
     private ArrayList<Integer> choosenSeats;
 
     public ArrayList<Integer> getChoosenSeats() {
         return choosenSeats;
     }
 
-    public void setSeance(Seance seance){
-        this.seance = seance;
+    public void setSeanceDTO(SeanceDTO seanceDTO){
+        this.seanceDTO = seanceDTO;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println(seance);
-        String url = ServerInfo.SEANCE_ENDPOINT + "/" + seance.getId() + "/seats/taken";
-        ResponseEntity<ArrayList<Seat>> response = cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<ArrayList<Seat>>() { });
-        ArrayList<Seat> takenSeats = response.getBody();
-        drawCinemaHall(seance.getAuditorium(), takenSeats);
+        System.out.println(seanceDTO);
+        String url = ServerInfo.SEANCE_ENDPOINT + "/" + seanceDTO.getId() + "/seat/taken";
+        ResponseEntity<ArrayList<SeatDTO>> response = cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<ArrayList<SeatDTO>>() { });
+        ArrayList<SeatDTO> takenSeats = response.getBody();
+        drawCinemaHall(seanceDTO.getAuditorium(), takenSeats);
     }
 
-    private void drawCinemaHall(Auditorium auditorium, List<Seat> takenSeats){
+    private void drawCinemaHall(AuditoriumDTO auditoriumDTO, List<SeatDTO> takenSeatDTOS){
         GridPane grid = new GridPane();
         choosenSeats = new ArrayList<>();
 
-        int rows = auditorium.getRows();
-        int cols = auditorium.getCols();
+        int rows = auditoriumDTO.getRows();
+        int cols = auditoriumDTO.getCols();
 
         for(int i=0; i<rows; ++i) grid.addRow(i);
         for(int i=0; i<cols; ++i) grid.addColumn(i);
 
-        List<Seat> seats = auditorium.getSeats();
+        List<SeatDTO> seatDTOS = auditoriumDTO.getSeats();
 
-        for(Seat seat : seats){
-            if(seat.isActive() == false) continue;
+        for(SeatDTO seatDTO : seatDTOS){
+            if(seatDTO.isActive() == false) continue;
 
             ToggleButton seatIcon = new ToggleButton();
-            seatIcon.setText(Integer.toString(seat.getNumber()));
+            seatIcon.setText(Integer.toString(seatDTO.getNumber()));
             seatIcon.setPrefSize(50, 50);
-            seatIcon.setId(Integer.toString(seat.getId()));
+            seatIcon.setId(Integer.toString(seatDTO.getId()));
 
             seatIcon.setOnAction(event -> {
                 Integer id_int = Integer.valueOf(seatIcon.getId());
@@ -87,12 +84,12 @@ public class ChooseSeatsController implements Initializable {
                 }
             });
 
-            if(takenSeats.contains(seat)){
+            if(takenSeatDTOS.contains(seatDTO)){
                 seatIcon.setDisable(true);
             }
 
             grid.setMargin(seatIcon, new Insets(10, 5, 0, 5));
-            grid.add(seatIcon, seat.getNumber(), seat.getRow());
+            grid.add(seatIcon, seatDTO.getNumber(), seatDTO.getRow());
         }
 
         grid.addRow(rows);

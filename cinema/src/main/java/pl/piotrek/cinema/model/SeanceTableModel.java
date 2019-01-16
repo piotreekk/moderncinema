@@ -1,9 +1,9 @@
-package pl.piotrek.cinema.model.table;
+package pl.piotrek.cinema.model;
 
 import javafx.beans.property.*;
 import javafx.scene.image.ImageView;
-import pl.piotrek.cinema.model.Movie;
-import pl.piotrek.cinema.model.Seance;
+import pl.piotrek.cinema.api.dto.MovieDTO;
+import pl.piotrek.cinema.api.dto.SeanceDTO;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,7 +11,7 @@ import java.time.LocalTime;
 // TODO: W TYCH MODELACH TEZ TRZEBA WPROWADZIC DUZO ZMIAN. W KONTROLERZE NIE BEDZIE TRZYMANA LISTA OBIEKTOW, TYLKO W TYM OBIEKCIE. JEGO LOGIKA TAKZE
 
 public class SeanceTableModel{
-    private Seance seance;
+    private SeanceDTO seanceDTO;
 
     private StringProperty movieTitle;
     private ObjectProperty<LocalTime> startTime;
@@ -20,22 +20,22 @@ public class SeanceTableModel{
     private IntegerProperty allSeatsCount;
     private ObjectProperty<ImageView> posterImage;
 
-    public SeanceTableModel(Seance seance){
-        this(seance.getMovie(), seance.getStartTime(), seance.getDate());
-        this.seance = seance;
+    public SeanceTableModel(SeanceDTO seanceDTO){
+        this(seanceDTO.getMovie(), seanceDTO.getStartTime(), seanceDTO.getDate());
+        this.seanceDTO = seanceDTO;
     }
 
-    public SeanceTableModel(Movie movie, LocalTime startTime, LocalDate date) {
-        this.movieTitle = new SimpleStringProperty(movie.getTitle());
+    public SeanceTableModel(MovieDTO movieDTO, LocalTime startTime, LocalDate date) {
+        this.movieTitle = new SimpleStringProperty(movieDTO.getTitle());
         this.allSeatsCount = new SimpleIntegerProperty(10);
         this.freeSeatsCount = new SimpleIntegerProperty(10);
         this.startTime = new SimpleObjectProperty<>(startTime);
         this.date = new SimpleObjectProperty<>(date);
-        this.posterImage = new SimpleObjectProperty<>(new ImageView(movie.getPosterPath()));
+        this.posterImage = new SimpleObjectProperty<>(new ImageView(movieDTO.getPosterPath()));
     }
 
-    public Seance getSeance(){
-        return seance;
+    public SeanceDTO getSeanceDTO(){
+        return seanceDTO;
     }
 
     public ImageView getPosterImage() {

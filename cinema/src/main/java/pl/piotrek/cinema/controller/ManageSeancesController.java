@@ -22,10 +22,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.client.RestClientException;
 import pl.piotrek.cinema.api.forms.SeanceForm;
 import pl.piotrek.cinema.config.ServerInfo;
-import pl.piotrek.cinema.model.Auditorium;
-import pl.piotrek.cinema.model.Movie;
-import pl.piotrek.cinema.model.Seance;
-import pl.piotrek.cinema.model.table.SeanceTableModel;
+import pl.piotrek.cinema.api.dto.AuditoriumDTO;
+import pl.piotrek.cinema.api.dto.MovieDTO;
+import pl.piotrek.cinema.api.dto.SeanceDTO;
+import pl.piotrek.cinema.model.SeanceTableModel;
 import pl.piotrek.cinema.util.CookieRestTemplate;
 
 import java.net.URL;
@@ -64,10 +64,10 @@ public class ManageSeancesController implements Initializable {
     private JFXDatePicker dateInput;
 
     @FXML
-    private ChoiceBox<Movie> movieChoice;
+    private ChoiceBox<MovieDTO> movieChoice;
 
     @FXML
-    private ChoiceBox<Auditorium> auditoriumChoice;
+    private ChoiceBox<AuditoriumDTO> auditoriumChoice;
 
     @FXML
     private JFXTextField seatsInput;
@@ -97,26 +97,26 @@ public class ManageSeancesController implements Initializable {
     private void loadDataFromAPI(){
         String url = ServerInfo.SEANCE_ENDPOINT + "/get/all";
 
-        ResponseEntity<ArrayList<Seance> > response =
-                cookieRestTemplate.exchange(url, HttpMethod.GET, null,  new ParameterizedTypeReference<ArrayList<Seance>>(){});
+        ResponseEntity<ArrayList<SeanceDTO> > response =
+                cookieRestTemplate.exchange(url, HttpMethod.GET, null,  new ParameterizedTypeReference<ArrayList<SeanceDTO>>(){});
 
-        ArrayList<Seance> responseList = response.getBody();
+        ArrayList<SeanceDTO> responseList = response.getBody();
         ArrayList<SeanceTableModel> seancesArrayList = new ArrayList<>();
-        for(Seance s : responseList)
+        for(SeanceDTO s : responseList)
             seancesArrayList.add(new SeanceTableModel(s));
 
         seances = FXCollections.observableArrayList(seancesArrayList);
     }
 
     private SeanceForm prepareSeance(){
-        Movie movie = movieChoice.getSelectionModel().getSelectedItem();
+        MovieDTO movieDTO = movieChoice.getSelectionModel().getSelectedItem();
         LocalDate date = dateInput.getValue();
         LocalTime time = timeInput.getValue();
-        Auditorium auditorium = auditoriumChoice.getSelectionModel().getSelectedItem();
+        AuditoriumDTO auditoriumDTO = auditoriumChoice.getSelectionModel().getSelectedItem();
 
         SeanceForm seance = new SeanceForm();
-        seance.setMovieId(movie.getId());
-        seance.setAuditoriumId(auditorium.getId());
+        seance.setMovieId(movieDTO.getId());
+        seance.setAuditoriumId(auditoriumDTO.getId());
         seance.setDate(date);
         seance.setStartTime(time);
 
@@ -129,11 +129,11 @@ public class ManageSeancesController implements Initializable {
         // w api bezposredniego pola o trwaniu seansu, wiec trzeba zrobic dluzsza przerwe
         String url = ServerInfo.SEANCE_ENDPOINT + "/add";
         try {
-            ResponseEntity<Seance> response = cookieRestTemplate.postForEntity(url, seance, Seance.class);
+            ResponseEntity<SeanceDTO> response = cookieRestTemplate.postForEntity(url, seance, SeanceDTO.class);
 
             if (response.getStatusCode().equals(HttpStatus.CREATED)) {
-                Seance newSeance = response.getBody();
-                seances.addAll(new SeanceTableModel(newSeance));
+                SeanceDTO newSeanceDTO = response.getBody();
+                seances.addAll(new SeanceTableModel(newSeanceDTO));
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
@@ -159,21 +159,21 @@ public class ManageSeancesController implements Initializable {
 
     private void initMoviesChoice(){
         String url = ServerInfo.MOVIE_ENDPOINT + "/get/all";
-        ResponseEntity<ArrayList<Movie> > response =
-                cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<ArrayList<Movie> >(){});
+        ResponseEntity<ArrayList<MovieDTO> > response =
+                cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<ArrayList<MovieDTO> >(){});
 
         if(response.getStatusCode() == HttpStatus.OK){
-            ArrayList<Movie> moviesList = response.getBody();
+            ArrayList<MovieDTO> moviesList = response.getBody();
 
             movieChoice.getItems().addAll(moviesList);
-            movieChoice.setConverter(new StringConverter<Movie>() {
+            movieChoice.setConverter(new StringConverter<MovieDTO>() {
                 @Override
-                public String toString(Movie movie) {
-                    return movie.getTitle();
+                public String toString(MovieDTO movieDTO) {
+                    return movieDTO.getTitle();
                 }
 
                 @Override
-                public Movie fromString(String string) {
+                public MovieDTO fromString(String string) {
                     return null;
                 }
             });
@@ -182,20 +182,20 @@ public class ManageSeancesController implements Initializable {
 
     private void initAuditoriumChoice(){
         String url = ServerInfo.AUDITORIUM_ENDPOINT + "/get/all";
-        ResponseEntity<ArrayList<Auditorium> > response =
-                cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<ArrayList<Auditorium> >(){});
+        ResponseEntity<ArrayList<AuditoriumDTO> > response =
+                cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<ArrayList<AuditoriumDTO> >(){});
 
         if(response.getStatusCode() == HttpStatus.OK){
-            ArrayList<Auditorium> auditoriesList = response.getBody();
+            ArrayList<AuditoriumDTO> auditoriesList = response.getBody();
             auditoriumChoice.getItems().addAll(auditoriesList);
-            auditoriumChoice.setConverter(new StringConverter<Auditorium>() {
+            auditoriumChoice.setConverter(new StringConverter<AuditoriumDTO>() {
                 @Override
-                public String toString(Auditorium auditorium) {
-                    return auditorium.getName();
+                public String toString(AuditoriumDTO auditoriumDTO) {
+                    return auditoriumDTO.getName();
                 }
 
                 @Override
-                public Auditorium fromString(String string) {
+                public AuditoriumDTO fromString(String string) {
                     return null;
                 }
             });

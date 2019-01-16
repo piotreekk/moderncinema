@@ -1,8 +1,12 @@
 package pl.piotrek.cinemabackend.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.List;
 
+
+@Data
 @Entity
 public class Reservation {
 
@@ -19,36 +23,4 @@ public class Reservation {
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.PERSIST)
     private List<ReservedSeat> reservedSeats;
 
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Seance getSeance() {
-        return seance;
-    }
-
-    public void setSeance(Seance seance) {
-        this.seance = seance;
-    }
-
-    public List<ReservedSeat> getReservedSeats() {
-        return reservedSeats;
-    }
-
-    public void setReservedSeats(List<ReservedSeat> reservedSeats) {
-        this.reservedSeats = reservedSeats;
-    }
 }

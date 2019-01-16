@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.client.RestTemplate;
+import pl.piotrek.cinema.api.dto.UserDTO;
 import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.model.User;
 import pl.piotrek.cinema.view.StageManager;
@@ -57,12 +58,13 @@ public class RegisterController implements Initializable {
 
     @FXML
     void register(){
-        User user = new User();
+        UserDTO user = new UserDTO();
         user.setFirstName(firstName.getText());
         user.setLastName(lastName.getText());
         user.setEmail(email.getText());
         user.setPassword(password.getText());
         user.setRole("user");
+        user.setEnabled(true);
 
         fieldsNotEmpty = !firstName.getText().isEmpty() && !lastName.getText().isEmpty() && !email.getText().isEmpty()
                 && !password.getText().isEmpty();
@@ -78,7 +80,7 @@ public class RegisterController implements Initializable {
         RestTemplate restTemplate = new RestTemplate();
         String url = ServerInfo.USER_ENDPOINT + "/adduser";
 
-        HttpEntity<User> request = new HttpEntity<>(user);
+        HttpEntity<UserDTO> request = new HttpEntity<>(user);
         User addedUser = restTemplate.postForObject(url, request, User.class);
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

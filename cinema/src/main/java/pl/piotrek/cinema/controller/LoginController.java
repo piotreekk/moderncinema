@@ -16,6 +16,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import pl.piotrek.cinema.api.dto.UserDTO;
 import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.model.User;
 import pl.piotrek.cinema.util.CookieRestTemplate;
@@ -38,19 +39,11 @@ public class LoginController {
         this.user = user;
     }
 
-    @FXML
-    private JFXTextField loginField;
-    @FXML
-    private JFXPasswordField passwordField;
-
-    @FXML
-    private JFXButton loginButton;
-
-    @FXML
-    private JFXButton registerButton;
-
-    @FXML
-    private Label message;
+    @FXML private JFXTextField loginField;
+    @FXML private JFXPasswordField passwordField;
+    @FXML private JFXButton loginButton;
+    @FXML private JFXButton registerButton;
+    @FXML private Label message;
 
     @FXML
     public void login(){
@@ -63,36 +56,36 @@ public class LoginController {
         MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
         map.add("username", username);
         map.add("password", password);
-        ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(url, map, String.class);
-        String cookie = stringResponseEntity.getHeaders().getFirst(HttpHeaders.SET_COOKIE);
+        ResponseEntity<String> response = restTemplate.postForEntity(url, map, String.class);
+        String cookie = response.getHeaders().getFirst(HttpHeaders.SET_COOKIE);
 
-        // Dołączam ciasteczko do swojego REST Clienta
+        // Dołączam ciasteczko do swojego REST Clienta ( Singleton )
         cookieRestTemplate.setCookie(cookie);
-        HttpEntity<String> res = new HttpEntity<>(username);
+
         try {
-            User fetcheduser = cookieRestTemplate.postForObject(ServerInfo.USER_ENDPOINT + "/get", res, User.class);
-            user.setId(fetcheduser.getId());
-            user.setFirstName(fetcheduser.getFirstName());
-            user.setLastName(fetcheduser.getLastName());
-            user.setEmail(fetcheduser.getEmail());
-            user.setPassword(fetcheduser.getPassword());
-            user.setRole(fetcheduser.getRole());
+            UserDTO loggedUser = cookieRestTemplate.postForObject(ServerInfo.USER_ENDPOINT + "/get", new HttpEntity<>(username), UserDTO.class);
+            user.setId(loggedUser.getId());
+            user.setFirstName(loggedUser.getFirstName());
+            user.setLastName(loggedUser.getLastName());
+            user.setEmail(loggedUser.getEmail());
+            user.setPassword(loggedUser.getPassword());
+            user.setRole(loggedUser.getRole());
 
             stageManager.switchScene(ViewList.DASHBOARD);
-//
-//        } catch(HttpClientErrorException.Unauthorized e){
-//            Alert alert = new Alert(Alert.AlertType.WARNING);
-//            alert.setResizable(true);
-//            alert.setTitle("Access Denied!");
-//            alert.setHeaderText("Authorization failed.");
-//
-//            Label alertMessage = new Label("Login and password don't match. Try another, or sign up.");
-//            alertMessage.setWrapText(true);
-//
-//            alert.getDialogPane().setContent(alertMessage);
-//            alert.showAndWait();
-//
-//            clearFields();
+
+        } catch(HttpClientErrorException.Unauthorized e){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setResizable(true);
+            alert.setTitle("Access Denied!");
+            alert.setHeaderText("Authorization failed.");
+
+            Label alertMessage = new Label("Login and password don't match. Try another, or sign up.");
+            alertMessage.setWrapText(true);
+
+            alert.getDialogPane().setContent(alertMessage);
+            alert.showAndWait();
+
+            clearFields();
 
         } catch(HttpClientErrorException e){
             Alert alert = new Alert(Alert.AlertType.ERROR);

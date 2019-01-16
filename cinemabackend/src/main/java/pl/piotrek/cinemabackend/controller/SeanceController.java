@@ -31,12 +31,12 @@ public class SeanceController {
         return seanceService.getByDate(date);
     }
 
-    @GetMapping("/{id}/seats/free")
+    @GetMapping("/{id}/seat/free")
     List<Seat> getFreeSeats(@PathVariable("id") Integer id){
         return seanceService.getFreeSeats(id);
     }
 
-    @GetMapping("/{id}/seats/taken")
+    @GetMapping("/{id}/seat/taken")
     List<Seat> getTakenSeats(@PathVariable("id") Integer id){
         return seanceService.getTakenSeats(id);
     }

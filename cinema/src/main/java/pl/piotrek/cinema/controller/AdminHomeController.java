@@ -11,7 +11,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 @Controller
-public class AdminHomeController implements Initializable {
+public class AdminHomeController implements Initializable{
     private User user;
 
     @FXML

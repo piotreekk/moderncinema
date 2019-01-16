@@ -11,6 +11,7 @@ import javafx.stage.StageStyle;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.client.RestTemplate;
+import pl.piotrek.cinema.api.dto.UserDTO;
 import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.model.User;
 
@@ -48,7 +49,7 @@ public class NewEmployeeController implements Initializable {
 
     @FXML
     void register(){
-        User user = new User();
+        UserDTO user = new UserDTO();
         user.setFirstName(firstName.getText());
         user.setLastName(lastName.getText());
         user.setEmail(email.getText());
@@ -69,7 +70,7 @@ public class NewEmployeeController implements Initializable {
         RestTemplate restTemplate = new RestTemplate();
         String url = ServerInfo.USER_ENDPOINT + "/adduser";
 
-        HttpEntity<User> request = new HttpEntity<>(user);
+        HttpEntity<UserDTO> request = new HttpEntity<>(user);
         User addedUser = restTemplate.postForObject(url, request, User.class);
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
