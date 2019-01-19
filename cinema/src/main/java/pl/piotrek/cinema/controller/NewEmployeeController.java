@@ -55,6 +55,7 @@ public class NewEmployeeController implements Initializable {
         user.setEmail(email.getText());
         user.setPassword(password.getText());
         user.setRole("admin");
+        user.setEnabled(true);
 
         fieldsNotEmpty = !firstName.getText().isEmpty() && !lastName.getText().isEmpty() && !email.getText().isEmpty()
                 && !password.getText().isEmpty();

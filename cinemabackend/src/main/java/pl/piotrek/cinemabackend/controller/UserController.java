@@ -2,39 +2,52 @@ package pl.piotrek.cinemabackend.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import pl.piotrek.cinema.api.dto.UserDTO;
+import pl.piotrek.cinemabackend.mapper.UserMapper;
 import pl.piotrek.cinemabackend.model.User;
 import pl.piotrek.cinemabackend.service.UserService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
     private UserService userService;
+    private UserMapper userMapper;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserMapper userMapper) {
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @PostMapping("/adduser")
     @ResponseStatus(value = HttpStatus.CREATED, reason = "User added!")
     @ResponseBody
-    User add(@RequestBody User user){
-        return userService.addUser(user);
+    UserDTO add(@RequestBody UserDTO userDTO){
+        User user = userMapper.userDtoToUser(userDTO);
+        User persisted = userService.addUser(user);
+        return userMapper.userToUserDto(persisted);
     }
 
     @PostMapping("/get")
-    User get(@RequestBody String email){
-        return userService.getUserByEmail(email);
+    UserDTO get(@RequestBody String email){
+        UserDTO response = userMapper.userToUserDto(userService.getUserByEmail(email));
+        return response;
     }
 
     @GetMapping("/get/admin")
-    List<User> getEmployees(@RequestParam(value = "active", required = false) boolean active){
+    List<UserDTO> getEmployees(@RequestParam(value = "active", required = false) boolean active){
+        List<User> list;
         if(active == true)
-            return userService.getActiveEmployees();
+            list = userService.getActiveEmployees();
         else
-            return userService.getAllEmployees();
+            list = userService.getAllEmployees();
+
+        return list.stream()
+                .map(user -> userMapper.userToUserDto(user))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/delete/{id}")
