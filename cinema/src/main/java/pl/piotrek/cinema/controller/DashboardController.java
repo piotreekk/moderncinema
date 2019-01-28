@@ -29,7 +29,7 @@ public class DashboardController implements Initializable {
 
     @Lazy
     @Autowired
-    StageManager stageManager;
+    private StageManager stageManager;
 
     @FXML
     private JFXButton admin_homeBtn;
