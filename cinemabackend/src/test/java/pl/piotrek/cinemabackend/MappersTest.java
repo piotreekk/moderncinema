@@ -18,7 +18,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 public class MappersTest {
 
     @Test
-    public void shouldMapUserToUserDto(){
+    public void shouldMapUserToUserDto() {
         // given
         User user = new User();
         user.setFirstName("Jan");
@@ -34,7 +34,7 @@ public class MappersTest {
     }
 
     @Test
-    public void shouldMaPSeanceToSeanceDTO(){
+    public void shouldMapeanceToSeanceDTO() {
         Seat seat = new Seat();
         seat.setRow(1);
 
@@ -54,11 +54,12 @@ public class MappersTest {
         seance.setMovie(new Movie());
 //        seance.setAuditorium(AuditoriumMapper.INSTANCE.auditoriumToAuditoriumDto(auditorium));
 
-        SeanceToDTOConverter converter = new SeanceToDTOConverter();
-        SeanceDTO seanceDTO = converter.convert(seance);
+//        SeanceToDTOConverter converter = new SeanceToDTOConverter();
+//        SeanceDTO seanceDTO = converter.convert(seance);
 
-//        SeanceDTO seanceDTO =SeanceMapper.INSTANCE.seanceToSeanceDto(seance);
-//        assertThat(seanceDTO.getAuditorium()).isEqualToComparingFieldByField(auditorium);
+        SeanceDTO seanceDTO = SeanceMapper.INSTANCE.seanceToSeanceDto(seance);
 
     }
+
+
 }

@@ -24,7 +24,6 @@ public class SeanceToDTOConverter implements BaseConverter<Seance, SeanceDTO> {
         movieDTO.setPosterPath(from.getMovie().getPosterPath());
         movieDTO.setReleaseDate(from.getMovie().getReleaseDate());
 
-
         seanceDTO.setMovie(movieDTO);
         seanceDTO.setDate(from.getDate());
         seanceDTO.setStartTime(from.getStartTime());

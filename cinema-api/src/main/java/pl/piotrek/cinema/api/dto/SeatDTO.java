@@ -15,7 +15,6 @@ public class SeatDTO {
     private int row;
     private int number;
     private boolean active;
-    private AuditoriumDTO auditorium;
 
 
     @Override

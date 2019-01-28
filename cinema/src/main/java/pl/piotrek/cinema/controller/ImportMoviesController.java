@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import pl.piotrek.cinema.config.ServerInfo;
@@ -141,9 +142,16 @@ public class ImportMoviesController implements Initializable {
         String url = ServerInfo.MOVIE_ENDPOINT + "/add";
         MovieDTO request = new MovieDTO(movie.getId(), movie.getTitle(), movie.getOverview(), movie.getReleaseDate(), movie.getPosterPath());
         ResponseEntity<MovieDTO> response = cookieRestTemplate.postForEntity(url, request, MovieDTO.class);
-        System.out.println(response);
+        if(response.getStatusCode() == HttpStatus.CREATED){
+            Alert success = new Alert(Alert.AlertType.INFORMATION);
+            success.setContentText("Movie added successfuly!");
+            success.showAndWait();
+        } else{
+            Alert failure = new Alert(Alert.AlertType.ERROR);
+            failure.setContentText("A problem occurred while adding movie.");
+            failure.showAndWait();
+        }
 
-        //TODO zmienic tak, aby uzywac kodu 201 Created i wyswietlic wiadomosc ze udalo sie stworzyc, lub inny kiedy sie nie udalo
     }
 
 }
