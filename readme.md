@@ -25,3 +25,14 @@ FRONTEND:
 
 GUI works fine only in exploded mode ie. when run with command: mvn spring-boot:run . When you run it from generated jar resources don't load at all. Don't know why yet, but probably it's because of springboot and javafx wrong integration and configuration.
 
+
+
+SCREENSHOTS:
+<br/>
+![Alt text](/screenshots/1.png?raw=true )
+<br/>
+![Alt text](/screenshots/2.png?raw=true )
+<br/>
+![Alt text](/screenshots/3.png?raw=true )
+<br/>
+![Alt text](/screenshots/4.png?raw=true )
