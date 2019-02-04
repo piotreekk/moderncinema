@@ -17,6 +17,7 @@ public class ReservationFx {
     private StringProperty auditorium = new SimpleStringProperty();
     private StringProperty seats = new SimpleStringProperty();
 
+
     public String getMovieTitle() {
         return movieTitle.get();
     }

@@ -18,7 +18,6 @@ import java.util.ResourceBundle;
 
 @Controller
 public class ReservationController implements Initializable {
-
     private User user;
     private ReservationModel model;
 
@@ -48,16 +47,16 @@ public class ReservationController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         initTableConfig();
         table.setItems(model.getReservationFxObservableList());
+        model.loadDataFromAPI(user.getId());
     }
-
 
     private void initTableConfig(){
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         titleCol.setCellValueFactory(new PropertyValueFactory<>("movieTitle"));
         dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
         timeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
-        auditoriumCol.setCellValueFactory(new PropertyValueFactory<>("auditoriumDTO"));
-        seatsCol.setCellValueFactory(new PropertyValueFactory<>("seatDTOS"));
+        auditoriumCol.setCellValueFactory(new PropertyValueFactory<>("auditorium"));
+        seatsCol.setCellValueFactory(new PropertyValueFactory<>("seats"));
     }
 
 }

@@ -40,7 +40,7 @@ public class ReservationModel {
         return reservationFxObservableList;
     }
 
-    private void loadDataFromAPI(Integer user_id){
+    public void loadDataFromAPI(Integer user_id){
         String url = ServerInfo.RESERVATION_ENDPOINT + "/user/" + user_id;
         ResponseEntity<List<String>> response = cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<String>>(){});
         if(response.getStatusCode() != HttpStatus.OK) return;
@@ -57,6 +57,7 @@ public class ReservationModel {
             ReservationFx reservationFx = new ReservationFx();
             reservationFx.setAuditorium(auditorium);
             reservationFx.setDate(date);
+            reservationFx.setStartTime(startTime);
             reservationFx.setMovieTitle(title);
             reservationFx.setSeats(seatsString);
 

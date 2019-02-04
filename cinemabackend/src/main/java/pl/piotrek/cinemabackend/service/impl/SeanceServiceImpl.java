@@ -61,6 +61,11 @@ public class SeanceServiceImpl implements SeanceService {
     }
 
     @Override
+    public Integer getFreeSeatsCount(Integer seance_id) {
+        return getFreeSeats(seance_id).size();
+    }
+
+    @Override
     public Auditorium getAuditorium(Integer seance_id) {
         return seanceRepository.findAuditoriumBySeanceId(seance_id);
     }

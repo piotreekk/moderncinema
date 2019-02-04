@@ -39,8 +39,7 @@ public class UserController {
 
     @GetMapping("/get/admin")
     List<UserDTO> getEmployees(){
-        List<User> list = userService.getAllEmployees();
-        return list.stream()
+        return userService.getAllEmployees().stream()
                 .map(user -> userMapper.userToUserDto(user))
                 .collect(Collectors.toList());
     }
