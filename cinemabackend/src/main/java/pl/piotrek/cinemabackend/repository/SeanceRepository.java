@@ -3,6 +3,7 @@ package pl.piotrek.cinemabackend.repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import pl.piotrek.cinemabackend.model.Auditorium;
 import pl.piotrek.cinemabackend.model.Seance;
 import pl.piotrek.cinemabackend.model.Seat;
 
@@ -19,5 +20,7 @@ public interface SeanceRepository extends CrudRepository<Seance, Integer> {
     @Query(value =  "SELECT seat FROM Seance seance JOIN seance.reservedSeats r_seat JOIN r_seat.seat seat WHERE seance = ?1")
     List<Seat> findTakenSeats(Seance seance);
 
+    @Query(value =  "SELECT auditorium FROM Seance seance WHERE seance.id = ?1")
+    Auditorium findAuditoriumBySeanceId(Integer id);
 
 }

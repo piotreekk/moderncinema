@@ -3,8 +3,6 @@ package pl.piotrek.cinema.controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.IntegerProperty;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -12,29 +10,19 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 import javafx.util.converter.NumberStringConverter;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import pl.piotrek.cinema.config.ServerInfo;
-import pl.piotrek.cinema.api.dto.AuditoriumDTO;
-import pl.piotrek.cinema.model.AuditoriumFx;
 import pl.piotrek.cinema.model.AuditoriumModel;
-import pl.piotrek.cinema.util.CookieRestTemplate;
+import pl.piotrek.cinema.model.fx.AuditoriumFx;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 @Controller
 public class AuditoriumController implements Initializable{
-    private CookieRestTemplate cookieRestTemplate;
+    private AuditoriumModel model;
 
-    public AuditoriumController(CookieRestTemplate cookieRestTemplate) {
-        this.cookieRestTemplate = cookieRestTemplate;
+    public AuditoriumController(AuditoriumModel model) {
+        this.model = model;
     }
 
     @FXML
@@ -59,51 +47,25 @@ public class AuditoriumController implements Initializable{
 
     private ContextMenu menu;
 
-    private AuditoriumModel model;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.model = new AuditoriumModel();
-        this.model.auditoriumFxObjectPropertyProperty().get().nameProperty().bind(this.nameInput.textProperty());
+        model.loadDataFromAPI();
+
+        Bindings.bindBidirectional(nameInput.textProperty(), this.model.auditoriumFxObjectPropertyProperty().get().nameProperty());
         Bindings.bindBidirectional(rowsInput.textProperty(), this.model.auditoriumFxObjectPropertyProperty().get().rowsProperty(), new NumberStringConverter());
         Bindings.bindBidirectional(colsInput.textProperty(), this.model.auditoriumFxObjectPropertyProperty().get().colsProperty(), new NumberStringConverter());
 
         initTableConfig();
         table.setItems(model.getAuditoriumFxObservableList());
-        loadDataFromAPI();
         button.setOnAction(event -> addAuditorium());
     }
 
-    private void loadDataFromAPI(){
-        String url = ServerInfo.AUDITORIUM_ENDPOINT + "/get/all";
-        ResponseEntity<ArrayList<AuditoriumDTO>> response =
-                cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<ArrayList<AuditoriumDTO>>(){});
-        ArrayList<AuditoriumDTO> responseList = response.getBody();
-
-        for(AuditoriumDTO a : responseList){
-            AuditoriumFx auditoriumFx = new AuditoriumFx();
-            auditoriumFx.setName(a.getName());
-            auditoriumFx.setRows(a.getRows());
-            auditoriumFx.setCols(a.getCols());
-            model.addAuditoriumToList(auditoriumFx);
-        }
-    }
-
+    // Chciałem zobaczyc jak działają bindingi w javie, dlatego w dodawaniu sali nie tworze nowego obiektu i nie ładuje do niego wszystkich pól
+    // po kolei, tylko pobieram obiekt z modelu do którego zbindowane są pola
     private void addAuditorium(){
         AuditoriumFx auditoriumFx = model.getAuditoriumFxObjectProperty();
-        String name = auditoriumFx.getName();
-        Integer rows = auditoriumFx.getRows();
-        Integer cols = auditoriumFx.getCols();
-
-        String url = ServerInfo.AUDITORIUM_ENDPOINT + "/add";
-        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
-        map.add("name", name);
-        map.add("rows", rows.toString());
-        map.add("cols", cols.toString());
-        ResponseEntity<String> response = cookieRestTemplate.postForEntity(url, map, String.class);
-        if(response.getStatusCode() == HttpStatus.CREATED){
-            model.addAuditoriumToList(auditoriumFx);
-        }
+        model.addAuditorium(auditoriumFx);
     }
 
     private void updateAuditorium(AuditoriumFx auditoriumFx){
@@ -125,19 +87,14 @@ public class AuditoriumController implements Initializable{
         updateDialog.showAndWait()
                 .filter(buttonType -> buttonType == ButtonType.OK)
                 .ifPresent(respone -> {
-                    AuditoriumDTO auditoriumDTO = new AuditoriumDTO();
-                    auditoriumDTO.setName(name.getText());
-                    auditoriumDTO.setRows(Integer.valueOf(rows.getText()));
-                    auditoriumDTO.setCols(Integer.valueOf(cols.getText()));
-                    performUpdate(auditoriumDTO);
+                    auditoriumFx.setName(name.getText());
+                    auditoriumFx.setRows(Integer.valueOf(rows.getText()));
+                    auditoriumFx.setCols(Integer.valueOf(cols.getText()));
+
+                    model.updateAuditorium(auditoriumFx);
                 });
     }
 
-    private void performUpdate(AuditoriumDTO auditoriumDTO){
-        String url = ServerInfo.AUDITORIUM_ENDPOINT + "/update/" + auditoriumDTO.getId() + "?name={name}&rows={rows}&cols={cols}";
-        cookieRestTemplate.put(url, null, auditoriumDTO.getName(), auditoriumDTO.getRows(), auditoriumDTO.getCols());
-        loadDataFromAPI();
-    }
 
     private void initTableConfig(){
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -153,7 +110,7 @@ public class AuditoriumController implements Initializable{
             return row ;
         });
 
-        nameCol.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         rowsCol.setCellValueFactory(new PropertyValueFactory<>("rows"));
         seatsCountCol.setCellValueFactory(new PropertyValueFactory<>("cols"));
     }

@@ -4,8 +4,10 @@ package pl.piotrek.cinemabackend.controller;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import pl.piotrek.cinema.api.dto.AuditoriumDTO;
 import pl.piotrek.cinema.api.dto.SeanceDTO;
 import pl.piotrek.cinema.api.forms.SeanceForm;
+import pl.piotrek.cinemabackend.mapper.AuditoriumMapper;
 import pl.piotrek.cinemabackend.mapper.SeanceMapper;
 import pl.piotrek.cinemabackend.model.Seance;
 import pl.piotrek.cinemabackend.model.Seat;
@@ -20,10 +22,12 @@ import java.util.stream.Collectors;
 public class SeanceController {
     private SeanceService seanceService;
     private SeanceMapper seanceMapper;
+    private AuditoriumMapper auditoriumMapper;
 
-    public SeanceController(SeanceService seanceService, SeanceMapper seanceMapper) {
+    public SeanceController(SeanceService seanceService, SeanceMapper seanceMapper, AuditoriumMapper auditoriumMapper) {
         this.seanceService = seanceService;
         this.seanceMapper = seanceMapper;
+        this.auditoriumMapper = auditoriumMapper;
     }
 
     @GetMapping("/get/all")
@@ -38,6 +42,11 @@ public class SeanceController {
         return seanceService.getByDate(date).stream()
                 .map(seance -> seanceMapper.seanceToSeanceDto(seance))
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/get/{id}/auditorium")
+    AuditoriumDTO getAuditorium(@PathVariable("id") Integer seanceId){
+        return auditoriumMapper.auditoriumToAuditoriumDto(seanceService.getAuditorium(seanceId));
     }
 
     @GetMapping("/{id}/seat/free")

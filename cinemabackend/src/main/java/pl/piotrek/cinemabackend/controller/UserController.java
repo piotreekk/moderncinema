@@ -38,13 +38,8 @@ public class UserController {
     }
 
     @GetMapping("/get/admin")
-    List<UserDTO> getEmployees(@RequestParam(value = "active", required = false) boolean active){
-        List<User> list;
-        if(active == true)
-            list = userService.getActiveEmployees();
-        else
-            list = userService.getAllEmployees();
-
+    List<UserDTO> getEmployees(){
+        List<User> list = userService.getAllEmployees();
         return list.stream()
                 .map(user -> userMapper.userToUserDto(user))
                 .collect(Collectors.toList());

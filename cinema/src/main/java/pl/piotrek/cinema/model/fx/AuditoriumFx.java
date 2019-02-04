@@ -1,4 +1,4 @@
-package pl.piotrek.cinema.model;
+package pl.piotrek.cinema.model.fx;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -6,10 +6,19 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class AuditoriumFx {
+    private Integer id;
     private StringProperty name = new SimpleStringProperty();
     private IntegerProperty rows = new SimpleIntegerProperty();
     private IntegerProperty cols = new SimpleIntegerProperty();
 
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name.get();

@@ -1,4 +1,4 @@
-package pl.piotrek.cinema.model;
+package pl.piotrek.cinema.model.fx;
 
 // TODO: W TYCH MODELACH TEZ TRZEBA WPROWADZIC DUZO ZMIAN. W KONTROLERZE NIE BEDZIE TRZYMANA LISTA OBIEKTOW, TYLKO W TYM OBIEKCIE. JEGO LOGIKA TAKZE
 
@@ -10,20 +10,12 @@ import javafx.beans.property.StringProperty;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class ReservationTableModel {
-    private StringProperty movieTitle;
-    private ObjectProperty<LocalDate> date;
-    private ObjectProperty<LocalTime> startTime;
-    private StringProperty auditorium;
-    private StringProperty seats;
-
-    public ReservationTableModel(String movieTitle, LocalDate date, LocalTime startTime, String auditorium, String seats) {
-        this.movieTitle = new SimpleStringProperty(movieTitle);
-        this.date = new SimpleObjectProperty<>(date);
-        this.startTime = new SimpleObjectProperty<>(startTime);
-        this.auditorium = new SimpleStringProperty(auditorium);
-        this.seats = new SimpleStringProperty(seats);
-    }
+public class ReservationFx {
+    private StringProperty movieTitle = new SimpleStringProperty();
+    private ObjectProperty<LocalDate> date = new SimpleObjectProperty<>();
+    private ObjectProperty<LocalTime> startTime = new SimpleObjectProperty<>();
+    private StringProperty auditorium = new SimpleStringProperty();
+    private StringProperty seats = new SimpleStringProperty();
 
     public String getMovieTitle() {
         return movieTitle.get();

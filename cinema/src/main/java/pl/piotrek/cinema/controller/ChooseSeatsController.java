@@ -14,10 +14,9 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.api.dto.AuditoriumDTO;
-import pl.piotrek.cinema.api.dto.SeanceDTO;
 import pl.piotrek.cinema.api.dto.SeatDTO;
+import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.util.CookieRestTemplate;
 
 import java.net.URL;
@@ -28,7 +27,8 @@ import java.util.ResourceBundle;
 @Controller
 public class ChooseSeatsController implements Initializable {
     private CookieRestTemplate cookieRestTemplate;
-    private SeanceDTO seanceDTO;
+//    private SeanceDTO seanceDTO;
+    private Integer seanceId;
 
     public ChooseSeatsController(CookieRestTemplate cookieRestTemplate) {
         this.cookieRestTemplate = cookieRestTemplate;
@@ -42,17 +42,20 @@ public class ChooseSeatsController implements Initializable {
         return choosenSeats;
     }
 
-    public void setSeanceDTO(SeanceDTO seanceDTO){
-        this.seanceDTO = seanceDTO;
+    public void setSeance(int id) {
+        this.seanceId = id;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println(seanceDTO);
-        String url = ServerInfo.SEANCE_ENDPOINT + "/" + seanceDTO.getId() + "/seat/taken";
+        String url = ServerInfo.SEANCE_ENDPOINT + "/" + seanceId + "/seat/taken";
         ResponseEntity<ArrayList<SeatDTO>> response = cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<ArrayList<SeatDTO>>() { });
         ArrayList<SeatDTO> takenSeats = response.getBody();
-        drawCinemaHall(seanceDTO.getAuditorium(), takenSeats);
+
+        String url2 = ServerInfo.SEANCE_ENDPOINT + "/get/" + seanceId + "/auditorium";
+        ResponseEntity<AuditoriumDTO> response2 = cookieRestTemplate.getForEntity(url2, AuditoriumDTO.class);
+
+        drawCinemaHall(response2.getBody(), takenSeats);
     }
 
     private void drawCinemaHall(AuditoriumDTO auditoriumDTO, List<SeatDTO> takenSeatDTOS){
@@ -79,16 +82,14 @@ public class ChooseSeatsController implements Initializable {
                 Integer id_int = Integer.valueOf(seatIcon.getId());
                 if(seatIcon.isSelected()){
                     choosenSeats.add(Integer.valueOf(id_int));
-                } else if(choosenSeats.contains(id_int)){
-                    choosenSeats.remove(id_int);
-                }
+                } else choosenSeats.remove(id_int);
             });
 
             if(takenSeatDTOS.contains(seatDTO)){
                 seatIcon.setDisable(true);
             }
 
-            grid.setMargin(seatIcon, new Insets(10, 5, 0, 5));
+            GridPane.setMargin(seatIcon, new Insets(10, 5, 0, 5));
             grid.add(seatIcon, seatDTO.getNumber(), seatDTO.getRow());
         }
 
@@ -114,7 +115,6 @@ public class ChooseSeatsController implements Initializable {
 
         container.getChildren().addAll(grid);
     }
-
 
 
 

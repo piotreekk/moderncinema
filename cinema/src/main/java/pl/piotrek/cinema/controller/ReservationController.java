@@ -1,89 +1,55 @@
 package pl.piotrek.cinema.controller;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import pl.piotrek.cinema.config.ServerInfo;
+import pl.piotrek.cinema.model.ReservationModel;
 import pl.piotrek.cinema.model.User;
-import pl.piotrek.cinema.model.ReservationTableModel;
-import pl.piotrek.cinema.util.CookieRestTemplate;
+import pl.piotrek.cinema.model.fx.ReservationFx;
 
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 @Controller
 public class ReservationController implements Initializable {
-    private CookieRestTemplate cookieRestTemplate;
-    private User user;
 
-    public ReservationController(CookieRestTemplate cookieRestTemplate, User user) {
-        this.cookieRestTemplate = cookieRestTemplate;
+    private User user;
+    private ReservationModel model;
+
+    public ReservationController(User user, ReservationModel model) {
         this.user = user;
+        this.model = model;
     }
 
     @FXML
     private AnchorPane headerPane;
 
     @FXML
-    private TableColumn<ReservationTableModel, String> titleCol;
-
+    private TableColumn<ReservationFx, String> titleCol;
     @FXML
-    private TableColumn<ReservationTableModel, LocalDate> dateCol;
-
+    private TableColumn<ReservationFx, LocalDate> dateCol;
     @FXML
-    private TableColumn<ReservationTableModel, LocalTime> timeCol;
-
+    private TableColumn<ReservationFx, LocalTime> timeCol;
     @FXML
-    private TableColumn<ReservationTableModel, String> auditoriumCol;
-
+    private TableColumn<ReservationFx, String> auditoriumCol;
     @FXML
-    private TableColumn<ReservationTableModel, String> seatsCol;
-
+    private TableColumn<ReservationFx, String> seatsCol;
     @FXML
-    private TableView<ReservationTableModel> table;
+    private TableView<ReservationFx> table;
 
-    private ObservableList<ReservationTableModel> reservations;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initTableConfig();
-        initContent();
+        table.setItems(model.getReservationFxObservableList());
     }
 
-    private void initContent(){
-        String url = ServerInfo.RESERVATION_ENDPOINT + "/user/" + user.getId();
-        ResponseEntity<List<String>> response = cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<String>>(){});
-        if(response.getStatusCode() != HttpStatus.OK) return;
-
-        ArrayList<ReservationTableModel> list = new ArrayList<>();
-        for(String rs : response.getBody()) {
-            String [] details = rs.split(";");
-            String title = details[0];
-            LocalDate date = LocalDate.parse(details[1]);
-            LocalTime startTime = LocalTime.parse(details[2]);
-            String auditorium = details[3];
-            String seatsString = details[4];
-
-            list.add(new ReservationTableModel(title, date, startTime, auditorium, seatsString));
-        }
-
-        reservations = FXCollections.observableArrayList(list);
-        table.setItems(reservations);
-    }
 
     private void initTableConfig(){
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);

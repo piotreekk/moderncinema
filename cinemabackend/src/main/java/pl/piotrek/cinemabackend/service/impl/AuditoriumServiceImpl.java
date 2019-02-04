@@ -28,12 +28,12 @@ public class AuditoriumServiceImpl implements AuditoriumService {
     }
 
     @Override
-    public void add(Auditorium auditorium) {
-        auditoriumRepository.save(auditorium);
+    public Auditorium add(Auditorium auditorium) {
+        return auditoriumRepository.save(auditorium);
     }
 
     @Override
-    public void add(String name, int rows, int cols) {
+    public Auditorium add(String name, int rows, int cols) {
         Auditorium auditorium = new Auditorium();
         auditorium.setRows(rows);
         auditorium.setCols(cols);
@@ -52,7 +52,7 @@ public class AuditoriumServiceImpl implements AuditoriumService {
         auditorium.setName(name);
         auditorium.setSeats(seats);
         // Seats will persist in DB cascade
-        auditoriumRepository.save(auditorium);
+        return auditoriumRepository.save(auditorium);
     }
 
     @Override

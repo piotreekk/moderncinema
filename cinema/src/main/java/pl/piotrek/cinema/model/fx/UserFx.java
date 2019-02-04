@@ -1,31 +1,24 @@
-package pl.piotrek.cinema.model;
-
-// TODO: W TYCH MODELACH TEZ TRZEBA WPROWADZIC DUZO ZMIAN. W KONTROLERZE NIE BEDZIE TRZYMANA LISTA OBIEKTOW, TYLKO W TYM OBIEKCIE. JEGO LOGIKA TAKZE
+package pl.piotrek.cinema.model.fx;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import pl.piotrek.cinema.model.User;
 
-public class UserTableModel {
-    private User user;
 
-    private StringProperty firstName;
-    private StringProperty lastName;
-    private StringProperty email;
-    private BooleanProperty active;
+public class UserFx {
+    private Integer id;
+    private StringProperty firstName = new SimpleStringProperty();
+    private StringProperty lastName = new SimpleStringProperty();
+    private StringProperty email = new SimpleStringProperty();
+    private BooleanProperty active = new SimpleBooleanProperty();
 
-    public UserTableModel(User user) {
-        this(user.getFirstName(), user.getLastName(), user.getEmail(), user.isEnabled());
-        this.user = user;
+    public Integer getId() {
+        return id;
     }
 
-    public UserTableModel(String firstName, String lastName, String email, boolean enabled) {
-        this.firstName = new SimpleStringProperty(firstName);
-        this.lastName = new SimpleStringProperty(lastName);
-        this.email = new SimpleStringProperty(email);
-        this.active = new SimpleBooleanProperty(enabled);
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getFirstName() {
@@ -74,9 +67,5 @@ public class UserTableModel {
 
     public void setActive(boolean active) {
         this.active.set(active);
-    }
-
-    public User getUser() {
-        return user;
     }
 }
