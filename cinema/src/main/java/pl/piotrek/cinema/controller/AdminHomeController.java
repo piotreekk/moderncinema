@@ -22,7 +22,6 @@ public class AdminHomeController implements Initializable{
         this.user = user;
     }
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         userLabel.setText(user.getFirstName() + " " + user.getLastName());

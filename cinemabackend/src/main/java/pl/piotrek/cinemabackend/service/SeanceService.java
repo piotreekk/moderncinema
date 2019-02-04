@@ -1,6 +1,7 @@
 package pl.piotrek.cinemabackend.service;
 
 import pl.piotrek.cinema.api.forms.SeanceForm;
+import pl.piotrek.cinemabackend.model.Auditorium;
 import pl.piotrek.cinemabackend.model.Seance;
 import pl.piotrek.cinemabackend.model.Seat;
 
@@ -12,6 +13,7 @@ public interface SeanceService {
     List<Seance> getByDate(LocalDate date);
     Seance addSeance(SeanceForm seanceForm);
 
+    Auditorium getAuditorium(Integer seance_id);
     List<Seat> getFreeSeats(Integer seance_id);
     List<Seat> getTakenSeats(Integer seance_id);
 

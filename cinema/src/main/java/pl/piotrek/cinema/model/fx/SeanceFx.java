@@ -1,53 +1,29 @@
-package pl.piotrek.cinema.model;
+package pl.piotrek.cinema.model.fx;
 
 import javafx.beans.property.*;
 import javafx.scene.image.ImageView;
-import pl.piotrek.cinema.api.dto.MovieDTO;
-import pl.piotrek.cinema.api.dto.SeanceDTO;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 // TODO: W TYCH MODELACH TEZ TRZEBA WPROWADZIC DUZO ZMIAN. W KONTROLERZE NIE BEDZIE TRZYMANA LISTA OBIEKTOW, TYLKO W TYM OBIEKCIE. JEGO LOGIKA TAKZE
 
-public class SeanceTableModel{
-    private SeanceDTO seanceDTO;
+public class SeanceFx {
+    private int id;
+    private StringProperty movieTitle = new SimpleStringProperty();
+    private ObjectProperty<LocalTime> startTime = new SimpleObjectProperty<>();
+    private ObjectProperty<LocalDate> date = new SimpleObjectProperty<>();
+    private IntegerProperty freeSeatsCount = new SimpleIntegerProperty();
+    private IntegerProperty allSeatsCount = new SimpleIntegerProperty();
+    private ObjectProperty<ImageView> posterImage = new SimpleObjectProperty<>();
 
-    private StringProperty movieTitle;
-    private ObjectProperty<LocalTime> startTime;
-    private ObjectProperty<LocalDate> date;
-    private IntegerProperty freeSeatsCount;
-    private IntegerProperty allSeatsCount;
-    private ObjectProperty<ImageView> posterImage;
 
-    public SeanceTableModel(SeanceDTO seanceDTO){
-        this(seanceDTO.getMovie(), seanceDTO.getStartTime(), seanceDTO.getDate());
-        this.seanceDTO = seanceDTO;
+    public int getId() {
+        return id;
     }
 
-    public SeanceTableModel(MovieDTO movieDTO, LocalTime startTime, LocalDate date) {
-        this.movieTitle = new SimpleStringProperty(movieDTO.getTitle());
-        this.allSeatsCount = new SimpleIntegerProperty(10);
-        this.freeSeatsCount = new SimpleIntegerProperty(10);
-        this.startTime = new SimpleObjectProperty<>(startTime);
-        this.date = new SimpleObjectProperty<>(date);
-        this.posterImage = new SimpleObjectProperty<>(new ImageView(movieDTO.getPosterPath()));
-    }
-
-    public SeanceDTO getSeanceDTO(){
-        return seanceDTO;
-    }
-
-    public ImageView getPosterImage() {
-        return posterImage.get();
-    }
-
-    public ObjectProperty<ImageView> posterImageProperty() {
-        return posterImage;
-    }
-
-    public void setPosterImage(ImageView posterImage) {
-        this.posterImage.set(posterImage);
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getMovieTitle() {
@@ -86,7 +62,6 @@ public class SeanceTableModel{
         this.date.set(date);
     }
 
-
     public int getFreeSeatsCount() {
         return freeSeatsCount.get();
     }
@@ -109,5 +84,17 @@ public class SeanceTableModel{
 
     public void setAllSeatsCount(int allSeatsCount) {
         this.allSeatsCount.set(allSeatsCount);
+    }
+
+    public ImageView getPosterImage() {
+        return posterImage.get();
+    }
+
+    public ObjectProperty<ImageView> posterImageProperty() {
+        return posterImage;
+    }
+
+    public void setPosterImage(String posterPath) {
+        this.posterImage = new SimpleObjectProperty<>(new ImageView((posterPath)));
     }
 }

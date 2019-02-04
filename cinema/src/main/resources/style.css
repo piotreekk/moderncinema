@@ -73,11 +73,11 @@
     -fx-background-color: transparent;
     -fx-border-color:transparent white transparent transparent;
     -fx-border-width:0.1;
+    -fx-text-fill: white;
 }
 
 .table-view .column-header-background{
     -fx-background-color: black;
-    -fx-text-fill: white;
 }
 
 .navbar .button:hover{

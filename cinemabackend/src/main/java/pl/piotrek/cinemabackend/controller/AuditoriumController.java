@@ -2,6 +2,8 @@ package pl.piotrek.cinemabackend.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import pl.piotrek.cinema.api.dto.AuditoriumDTO;
+import pl.piotrek.cinemabackend.mapper.AuditoriumMapper;
 import pl.piotrek.cinemabackend.model.Auditorium;
 import pl.piotrek.cinemabackend.service.AuditoriumService;
 
@@ -11,15 +13,19 @@ import java.util.List;
 @RequestMapping("/auditorium")
 public class AuditoriumController {
     private AuditoriumService auditoriumService;
+    private AuditoriumMapper mapper;
 
-    public AuditoriumController(AuditoriumService auditoriumService) {
+    public AuditoriumController(AuditoriumService auditoriumService, AuditoriumMapper mapper) {
         this.auditoriumService = auditoriumService;
+        this.mapper = mapper;
     }
 
     @PostMapping("/add")
     @ResponseStatus(value = HttpStatus.CREATED, reason = "Auditorium added!")
-    void add(@RequestParam String name, @RequestParam Integer rows, @RequestParam Integer cols){
-        auditoriumService.add(name, rows, cols);
+    @ResponseBody
+    AuditoriumDTO add(@RequestParam String name, @RequestParam Integer rows, @RequestParam Integer cols){
+        Auditorium auditorium = auditoriumService.add(name, rows, cols);
+        return mapper.auditoriumToAuditoriumDto(auditorium);
     }
 
     @PutMapping("/update/{id}")

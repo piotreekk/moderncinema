@@ -1,8 +1,6 @@
 package pl.piotrek.cinema.controller;
 
 import com.jfoenix.controls.JFXDatePicker;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -10,17 +8,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import pl.piotrek.cinema.api.forms.ReservationForm;
-import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.config.SpringFXMLLoader;
-import pl.piotrek.cinema.api.dto.SeanceDTO;
+import pl.piotrek.cinema.model.SeanceModelUser;
 import pl.piotrek.cinema.model.User;
-import pl.piotrek.cinema.model.SeanceTableModel;
-import pl.piotrek.cinema.util.CookieRestTemplate;
+import pl.piotrek.cinema.model.fx.SeanceFx;
 import pl.piotrek.cinema.view.ViewList;
 
 import javax.swing.text.html.ImageView;
@@ -28,7 +20,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -36,55 +27,48 @@ import java.util.ResourceBundle;
 @Controller
 public class SeancesController implements Initializable {
     private User user;
-    private CookieRestTemplate cookieRestTemplate;
     private SpringFXMLLoader springFXMLLoader;
     private ChooseSeatsController chooseSeatsController;
 
+    private SeanceModelUser model;
+
     @Autowired
-    public SeancesController(User user, CookieRestTemplate cookieRestTemplate, SpringFXMLLoader springFXMLLoader, ChooseSeatsController chooseSeatsController) {
+    public SeancesController(User user, SpringFXMLLoader springFXMLLoader, ChooseSeatsController chooseSeatsController, SeanceModelUser model) {
         this.user = user;
-        this.cookieRestTemplate = cookieRestTemplate;
         this.springFXMLLoader = springFXMLLoader;
         this.chooseSeatsController = chooseSeatsController;
+        this.model = model;
     }
 
     @FXML
-    private TableView<SeanceTableModel> table;
-
+    private TableView<SeanceFx> table;
     @FXML
-    private TableColumn<SeanceTableModel, ImageView> imageCol;
-
+    private TableColumn<SeanceFx, ImageView> imageCol;
     @FXML
-    private TableColumn<SeanceTableModel, String> movieCol;
-
+    private TableColumn<SeanceFx, String> movieCol;
     @FXML
-    private TableColumn<SeanceTableModel, LocalTime> timeCol;
-
+    private TableColumn<SeanceFx, LocalTime> timeCol;
     @FXML
-    private TableColumn<SeanceTableModel, String> allSeatsCol;
-
+    private TableColumn<SeanceFx, String> allSeatsCol;
     @FXML
-    private TableColumn<SeanceTableModel, String> freeSeatsCol;
-
+    private TableColumn<SeanceFx, String> freeSeatsCol;
     @FXML
     private JFXDatePicker dateInput;
-
     @FXML
     private Label choosenDateInput;
-
-    private ObservableList<SeanceTableModel> seances;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initTableConfig();
         dateInput.setValue(LocalDate.now());
-        loadDataFromAPI(LocalDate.now());
-        table.setItems(seances);
+
+        model.loadDataFromAPI(LocalDate.now());
+
+        table.setItems(model.getSeanceFxObservableList());
 
         dateInput.setOnAction(event -> {
             choosenDateInput.setText(dateInput.getValue().toString());
-            loadDataFromAPI(dateInput.getValue());
-            table.setItems(seances);
+            model.loadDataFromAPI(dateInput.getValue());
         });
 
         table.setOnMousePressed(event -> {
@@ -94,22 +78,9 @@ public class SeancesController implements Initializable {
         });
     }
 
-    private void persistReservation(SeanceDTO seanceDTO, List<Integer> choosenSeats, boolean shouldSendMail){
-        String url = ServerInfo.RESERVATION_ENDPOINT + "/add";
-        if(shouldSendMail)
-            url += "?mail=true";
-        else
-            url += "?mail=false";
-        ReservationForm reservation = new ReservationForm();
-        reservation.setSeanceId(seanceDTO.getId());
-        reservation.setSeats(choosenSeats);
-        reservation.setUserId(user.getId());
-        cookieRestTemplate.postForEntity(url, reservation, ReservationForm.class);
-    }
-
     private void completeReservation(){
-        SeanceDTO seanceDTO = table.getSelectionModel().getSelectedItem().getSeanceDTO();
-        chooseSeatsController.setSeanceDTO(seanceDTO);
+        SeanceFx seanceFx = table.getSelectionModel().getSelectedItem();
+        chooseSeatsController.setSeance(seanceFx.getId());
         List<Integer> choosenSeats;
         AnchorPane pane = new AnchorPane();
         try {
@@ -128,9 +99,9 @@ public class SeancesController implements Initializable {
                 Optional<ButtonType> choice = success.showAndWait();
                 if(choice.isPresent()){
                     if(choice.get() == ButtonType.YES)
-                        persistReservation(seanceDTO, choosenSeats, true);
+                        model.persistReservation(seanceFx, user.getId(), choosenSeats, true);
                     else if(choice.get() == ButtonType.NO)
-                        persistReservation(seanceDTO, choosenSeats, false);
+                        model.persistReservation(seanceFx, user.getId(), choosenSeats, false);
                 }
 
             } else{
@@ -151,20 +122,6 @@ public class SeancesController implements Initializable {
         movieCol.setCellValueFactory(new PropertyValueFactory<>("movieTitle"));
         freeSeatsCol.setCellValueFactory(new PropertyValueFactory<>("freeSeatsCount"));
         allSeatsCol.setCellValueFactory(new PropertyValueFactory<>("allSeatsCount"));
-    }
-
-    private void loadDataFromAPI(LocalDate date){
-        String url = ServerInfo.SEANCE_ENDPOINT + "/get/bydate/{date}";
-        ResponseEntity<ArrayList<SeanceDTO>> response =
-                cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<ArrayList<SeanceDTO>>(){}, date);
-
-        ArrayList<SeanceDTO> responseList = response.getBody();
-        ArrayList<SeanceTableModel> seancesArrayList = new ArrayList<>();
-
-        for(SeanceDTO s : responseList)
-            seancesArrayList.add(new SeanceTableModel(s));
-
-        seances = FXCollections.observableArrayList(seancesArrayList);
     }
 
 }

@@ -3,6 +3,7 @@ package pl.piotrek.cinemabackend.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.piotrek.cinema.api.forms.SeanceForm;
+import pl.piotrek.cinemabackend.model.Auditorium;
 import pl.piotrek.cinemabackend.model.Seance;
 import pl.piotrek.cinemabackend.model.Seat;
 import pl.piotrek.cinemabackend.repository.AuditoriumRepository;
@@ -59,5 +60,8 @@ public class SeanceServiceImpl implements SeanceService {
         return seanceRepository.findTakenSeats(seance);
     }
 
-
+    @Override
+    public Auditorium getAuditorium(Integer seance_id) {
+        return seanceRepository.findAuditoriumBySeanceId(seance_id);
+    }
 }

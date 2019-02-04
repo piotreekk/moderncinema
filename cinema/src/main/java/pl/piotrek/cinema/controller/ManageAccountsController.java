@@ -2,8 +2,6 @@ package pl.piotrek.cinema.controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -12,85 +10,73 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.config.SpringFXMLLoader;
-import pl.piotrek.cinema.model.User;
-import pl.piotrek.cinema.model.UserTableModel;
-import pl.piotrek.cinema.util.CookieRestTemplate;
+import pl.piotrek.cinema.model.UserModel;
+import pl.piotrek.cinema.model.fx.UserFx;
 import pl.piotrek.cinema.view.ViewList;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 @Controller
 public class ManageAccountsController implements Initializable {
-    private CookieRestTemplate cookieRestTemplate;
     private SpringFXMLLoader springFXMLLoader;
+    private UserModel model;
 
     @Autowired
-    public ManageAccountsController(CookieRestTemplate cookieRestTemplate, SpringFXMLLoader springFXMLLoader) {
-        this.cookieRestTemplate = cookieRestTemplate;
+    public ManageAccountsController(SpringFXMLLoader springFXMLLoader, UserModel model) {
         this.springFXMLLoader = springFXMLLoader;
+        this.model = model;
     }
 
     @FXML
-    private JFXCheckBox showDisabled_check;
-
+    private TableView<UserFx> table;
     @FXML
-    private TableView<UserTableModel> table;
-
+    private TableColumn<UserFx, String> fnameCol;
     @FXML
-    private TableColumn<UserTableModel, String> fnameCol;
-
+    private TableColumn<UserFx, String> lnameCol;
     @FXML
-    private TableColumn<UserTableModel, String> lnameCol;
-
+    private TableColumn<UserFx, String> emailCol;
     @FXML
-    private TableColumn<UserTableModel, String> emailCol;
-
-    @FXML
-    private TableColumn<UserTableModel, Boolean> isActiveCol;
-
-    @FXML
-    private AnchorPane headerPane;
+    private TableColumn<UserModel, Boolean> isActiveCol;
 
     @FXML
     private JFXButton addEmployeeBtn;
 
-    private ObservableList<UserTableModel> employees;
+    @FXML
+    private JFXCheckBox showDisabled_check;
 
     private ContextMenu menu;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initTableConfig();
-        loadDataFromAPI(false);
+        model.loadDataFromAPI();
+
+        table.setItems(model.getUserFxFilteredList());
+
         showDisabled_check.setOnAction(event -> {
             if(showDisabled_check.isSelected())
-                loadDataFromAPI(true);
+                model.showDisabledAccounts(true);
             else
-                loadDataFromAPI(false);
+                model.showDisabledAccounts(false);
         });
 
         addEmployeeBtn.setOnAction(event -> newEmployee());
-
     }
 
     private void initTableConfig(){
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.setTooltip(new Tooltip("Right click to show context menu"));
         table.setRowFactory( tv -> {
-            TableRow<UserTableModel> row = new TableRow<>();
+            TableRow<UserFx> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if(event.getButton() == MouseButton.SECONDARY && !row.isEmpty()){
-                    UserTableModel rowData = row.getItem();
-                    showContextMenu(event.getScreenX(), event.getScreenY(), rowData.getUser());
+                    UserFx rowData = row.getItem();
+                    showContextMenu(event.getScreenX(), event.getScreenY(), rowData);
                 }
             });
             return row ;
@@ -103,31 +89,16 @@ public class ManageAccountsController implements Initializable {
     }
 
 
-    private void showContextMenu(double x_pos, double y_pos, User user){
+    private void showContextMenu(double x_pos, double y_pos, UserFx userFx){
         if(menu != null && menu.isShowing()) menu.hide();
         MenuItem mi1 = new MenuItem("Update");
         MenuItem mi2 = new MenuItem("Delete");
 
-        mi2.setOnAction(event -> deleteEmployee(user));
+        mi2.setOnAction(event -> model.deleteEmployee(userFx));
         menu = new ContextMenu(mi1, mi2);
         menu.show(table, x_pos, y_pos);
     }
 
-    private void loadDataFromAPI(boolean shouldLoadDisabled){
-        String url = ServerInfo.USER_ENDPOINT + "/get/admin";
-        if(shouldLoadDisabled == false) url += "?active=true";
-
-        ResponseEntity<ArrayList<User>> response =
-                cookieRestTemplate.exchange(url, HttpMethod.GET, null,  new ParameterizedTypeReference<ArrayList<User>>(){});
-
-        ArrayList<User> responseList = response.getBody();
-        ArrayList<UserTableModel> employeesArrayList = new ArrayList<>();
-        for(User u : responseList)
-            employeesArrayList.add(new UserTableModel(u));
-
-        employees = FXCollections.observableArrayList(employeesArrayList);
-        table.setItems(employees);
-    }
 
     private void newEmployee(){
         AnchorPane pane = new AnchorPane();
@@ -140,15 +111,11 @@ public class ManageAccountsController implements Initializable {
             alert.getDialogPane().setContent(pane);
             alert.showAndWait()
                     .filter(buttonType -> buttonType == ButtonType.OK)
-                    .ifPresent(response -> loadDataFromAPI(showDisabled_check.isSelected()));
+                    .ifPresent(response -> model.loadDataFromAPI());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void deleteEmployee(User user){
-        String url = ServerInfo.USER_ENDPOINT + "/delete/" + user.getId();
-        cookieRestTemplate.exchange(url, HttpMethod.GET, null, String.class);
-    }
 
 }
