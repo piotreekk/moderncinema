@@ -50,15 +50,20 @@ public class SeanceController {
     }
 
     @GetMapping("/{id}/seat/free")
-    List<Seat> getFreeSeats(@PathVariable("id") Integer id){
-        return seanceService.getFreeSeats(id);
+    List<Seat> getFreeSeats(@PathVariable("id") Integer senace_id){
+        return seanceService.getFreeSeats(senace_id);
     }
 
     @GetMapping("/{id}/seat/taken")
-    List<Seat> getTakenSeats(@PathVariable("id") Integer id){
-        return seanceService.getTakenSeats(id);
+    List<Seat> getTakenSeats(@PathVariable("id") Integer seance_id){
+        return seanceService.getTakenSeats(seance_id);
     }
 
+
+    @GetMapping("/get/{id}/seat/free/count")
+    Integer getFreeSeatsCount(@PathVariable("id") Integer seance_id){
+        return seanceService.getFreeSeatsCount(seance_id);
+    }
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     Seance add(@RequestBody SeanceForm seance){

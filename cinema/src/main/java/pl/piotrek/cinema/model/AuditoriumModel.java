@@ -1,7 +1,5 @@
 package pl.piotrek.cinema.model;
 
-// TODO: W TYCH MODELACH TEZ TRZEBA WPROWADZIC DUZO ZMIAN. W KONTROLERZE NIE BEDZIE TRZYMANA LISTA OBIEKTOW, TYLKO W TYM OBIEKCIE. JEGO LOGIKA TAKZE
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -17,6 +15,7 @@ import pl.piotrek.cinema.api.dto.AuditoriumDTO;
 import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.model.fx.AuditoriumFx;
 import pl.piotrek.cinema.util.CookieRestTemplate;
+import pl.piotrek.cinema.util.converter.AuditoriumConverter;
 
 import java.util.ArrayList;
 
@@ -59,11 +58,7 @@ public class AuditoriumModel {
         ArrayList<AuditoriumDTO> responseList = response.getBody();
 
         for(AuditoriumDTO a : responseList){
-            AuditoriumFx auditoriumFx = new AuditoriumFx();
-            auditoriumFx.setId(a.getId());
-            auditoriumFx.setName(a.getName());
-            auditoriumFx.setRows(a.getRows());
-            auditoriumFx.setCols(a.getCols());
+            AuditoriumFx auditoriumFx = AuditoriumConverter.auditoriumDtoToAuditorium(a);
             addAuditoriumToList(auditoriumFx);
         }
     }
@@ -88,16 +83,11 @@ public class AuditoriumModel {
 
 
     public void updateAuditorium(AuditoriumFx auditoriumFx){
-        AuditoriumDTO auditoriumDTO = new AuditoriumDTO();
-        auditoriumDTO.setId(auditoriumFx.getId());
-        auditoriumDTO.setName(auditoriumFx.getName());
-        auditoriumDTO.setRows(auditoriumFx.getRows());
-        auditoriumDTO.setCols(auditoriumFx.getCols());
+        AuditoriumDTO auditoriumDTO = AuditoriumConverter.auditoriumToAuditoriumDto(auditoriumFx);
 
         String url = ServerInfo.AUDITORIUM_ENDPOINT + "/update/" + auditoriumDTO.getId() + "?name={name}&rows={rows}&cols={cols}";
         cookieRestTemplate.put(url, null, auditoriumDTO.getName(), auditoriumDTO.getRows(), auditoriumDTO.getCols());
 
-//        auditoriumFxObservableList.removeIf(a -> a.getName().equals(auditoriumFx.getName()));
         auditoriumFxObservableList.replaceAll(auditoriumFx1 -> auditoriumFx1.getName().equals(auditoriumFx.getName()) ? auditoriumFx : auditoriumFx1);
 
     }

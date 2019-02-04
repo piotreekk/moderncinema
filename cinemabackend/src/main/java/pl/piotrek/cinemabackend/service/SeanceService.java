@@ -17,4 +17,5 @@ public interface SeanceService {
     List<Seat> getFreeSeats(Integer seance_id);
     List<Seat> getTakenSeats(Integer seance_id);
 
+    Integer getFreeSeatsCount(Integer seance_id);
 }

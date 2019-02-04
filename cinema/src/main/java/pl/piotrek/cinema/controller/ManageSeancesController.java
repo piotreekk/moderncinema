@@ -70,6 +70,7 @@ public class ManageSeancesController implements Initializable {
         initMoviesChoice();
         initAuditoriumChoice();
 
+        model.loadDataFromAPI();
         table.setItems(model.getSeanceFxObservableList());
 
         addSeanceBtn.setOnAction(event -> {

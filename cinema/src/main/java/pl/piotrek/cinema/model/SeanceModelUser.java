@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import pl.piotrek.cinema.api.dto.SeanceDTO;
@@ -13,6 +14,7 @@ import pl.piotrek.cinema.api.forms.ReservationForm;
 import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.model.fx.SeanceFx;
 import pl.piotrek.cinema.util.CookieRestTemplate;
+import pl.piotrek.cinema.util.converter.SeanceConverter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -52,7 +54,13 @@ public class SeanceModelUser {
         reservation.setSeanceId(seanceFx.getId());
         reservation.setSeats(choosenSeats);
         reservation.setUserId(user_id);
-        cookieRestTemplate.postForEntity(url, reservation, ReservationForm.class);
+        ResponseEntity<ReservationForm> response = cookieRestTemplate.postForEntity(url, reservation, ReservationForm.class);
+        if(response.getStatusCode() == HttpStatus.CREATED)
+            seanceFxObservableList.replaceAll(s -> {
+                if(s.getId() == reservation.getSeanceId())
+                    s.setFreeSeatsCount(s.getFreeSeatsCount() - reservation.getSeats().size());
+                return s;
+            });
     }
 
 
@@ -66,12 +74,13 @@ public class SeanceModelUser {
         ArrayList<SeanceDTO> responseList = response.getBody();
 
         for(SeanceDTO s : responseList){
-            SeanceFx seanceFx = new SeanceFx();
-            seanceFx.setId(s.getId());
-            seanceFx.setMovieTitle(s.getMovie().getTitle());
-            seanceFx.setAllSeatsCount(s.getAuditorium().getRows()*s.getAuditorium().getCols());
-            seanceFx.setPosterImage(s.getMovie().getPosterPath());
+            SeanceFx seanceFx = SeanceConverter.seanceDtoToSeance(s);
 
+            // dla kazdego musze dociagnac z serwera ilosc wolnych miejsc
+            String url1 = ServerInfo.SEANCE_ENDPOINT + "/get/" + seanceFx.getId() + "/seat/free/count";
+            ResponseEntity<Integer> responseEntitty = cookieRestTemplate.getForEntity(url1, Integer.class);
+
+            seanceFx.setFreeSeatsCount(responseEntitty.getBody());
             addSeanceToTable(seanceFx);
         }
     }

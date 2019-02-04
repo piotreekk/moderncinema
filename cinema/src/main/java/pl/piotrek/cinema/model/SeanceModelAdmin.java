@@ -16,6 +16,7 @@ import pl.piotrek.cinema.api.forms.SeanceForm;
 import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.model.fx.SeanceFx;
 import pl.piotrek.cinema.util.CookieRestTemplate;
+import pl.piotrek.cinema.util.converter.SeanceConverter;
 
 import java.util.ArrayList;
 
@@ -49,12 +50,8 @@ public class SeanceModelAdmin {
 
             if (response.getStatusCode().equals(HttpStatus.CREATED)) {
                 SeanceDTO newSeanceDTO = response.getBody();
-                SeanceFx seanceFx = new SeanceFx();
-                seanceFx.setId(newSeanceDTO.getId());
-                seanceFx.setMovieTitle(newSeanceDTO.getMovie().getTitle());
-                seanceFx.setAllSeatsCount(newSeanceDTO.getAuditorium().getRows()*newSeanceDTO.getAuditorium().getCols());
-                seanceFx.setDate(newSeanceDTO.getDate());
-                seanceFx.setStartTime(newSeanceDTO.getStartTime());
+                SeanceFx seanceFx = SeanceConverter.seanceDtoToSeance(newSeanceDTO);
+                seanceFx.setFreeSeatsCount(seanceFx.getAllSeatsCount());
                 addSeanceToTable(seanceFx);
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -71,7 +68,7 @@ public class SeanceModelAdmin {
     }
 
 
-    private void loadDataFromAPI(){
+    public void loadDataFromAPI(){
         seanceFxObservableList.clear();
 
         String url = ServerInfo.SEANCE_ENDPOINT + "/get/all";
@@ -80,12 +77,13 @@ public class SeanceModelAdmin {
 
         ArrayList<SeanceDTO> responseList = response.getBody();
         for(SeanceDTO s : responseList){
-            SeanceFx seanceFx = new SeanceFx();
-            seanceFx.setId(s.getId());
-            seanceFx.setMovieTitle(s.getMovie().getTitle());
-            seanceFx.setAllSeatsCount(s.getAuditorium().getRows()*s.getAuditorium().getCols());
-            seanceFx.setDate(s.getDate());
-            seanceFx.setStartTime(s.getStartTime());
+            SeanceFx seanceFx = SeanceConverter.seanceDtoToSeance(s);
+
+            // dla kazdego musze dociagnac z serwera ilosc wolnych miejsc
+            String url1 = ServerInfo.SEANCE_ENDPOINT + "/get/" + seanceFx.getId() + "/seat/free/count";
+            ResponseEntity<Integer> responseEntitty = cookieRestTemplate.getForEntity(url1, Integer.class);
+            seanceFx.setFreeSeatsCount(responseEntitty.getBody());
+
             addSeanceToTable(seanceFx);
         }
 
