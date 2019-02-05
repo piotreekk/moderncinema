@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="cinema" />
+        <module name="cinema-api" />
         <module name="cinemaapi" />
         <module name="cinemabackend" />
       </profile>

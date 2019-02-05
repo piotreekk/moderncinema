@@ -16,7 +16,7 @@ public class MovieFx {
     private StringProperty releaseDate = new SimpleStringProperty();
     private StringProperty posterPath = new SimpleStringProperty();
     private ObjectProperty<ImageView> posterImage = new SimpleObjectProperty<>();
-    private ObjectProperty<Label> overviewLabel = new SimpleObjectProperty<>(new Label());
+    private ObjectProperty<Label> overviewLabel = new SimpleObjectProperty<>();
 
 
     public int getId() {
@@ -49,6 +49,7 @@ public class MovieFx {
 
     public void setOverview(String overview) {
         this.overview.set(overview);
+        this.overviewLabel.set(new Label());
         this.overviewLabel.get().setText(overview);
         this.overviewLabel.get().setWrapText(true);
     }

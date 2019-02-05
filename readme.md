@@ -29,6 +29,8 @@ GUI works fine only in exploded mode ie. when run with command: mvn spring-boot:
 
 SCREENSHOTS:
 <br/>
+![Alt text](/screenshots/5.png?raw=true )
+<br/>
 ![Alt text](/screenshots/1.png?raw=true )
 <br/>
 ![Alt text](/screenshots/2.png?raw=true )

@@ -1,7 +1,6 @@
 package pl.piotrek.cinemabackend.bootstrap;
 
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -18,7 +17,7 @@ import pl.piotrek.cinemabackend.service.AuditoriumService;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Profile("development")
+//@Profile("development")
 @Component
 public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> {
     private UserRepository userRepository;
