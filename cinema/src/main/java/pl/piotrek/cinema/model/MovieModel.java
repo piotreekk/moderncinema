@@ -47,40 +47,51 @@ public class MovieModel {
 
 
     public void loadDataFromAPI(String year){
-        movieFxObservableList.clear();
+        Runnable task = new Runnable() {
+            @Override
+            public void run() {
+                movieFxObservableList.clear();
+                // wyczyszczenie filtrów z poprzedniej sesji
+                movieFxFilteredList.setPredicate(movieFx -> true);
 
-        String resourceUrl = "https://api.themoviedb.org/3/discover/movie?api_key=7dd49a6da2d9bfb5ee7b370c9ee02139";
-        String completeResourceUrl = resourceUrl + "&primary_release_year=" + year;
-        ResponseEntity<String> response = cookieRestTemplate.getForEntity(completeResourceUrl, String.class);
+                String resourceUrl = "https://api.themoviedb.org/3/discover/movie?api_key=7dd49a6da2d9bfb5ee7b370c9ee02139";
+                String completeResourceUrl = resourceUrl + "&primary_release_year=" + year;
+                ResponseEntity<String> response = cookieRestTemplate.getForEntity(completeResourceUrl, String.class);
 
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            JsonNode root = mapper.readTree(response.getBody());
-            JsonNode results = root.get("results");
+                ObjectMapper mapper = new ObjectMapper();
+                try {
+                    JsonNode root = mapper.readTree(response.getBody());
+                    JsonNode results = root.get("results");
 
-            results.forEach(jsonNode -> {
-                int id = jsonNode.get("id").asInt();
-                String title = jsonNode.get("original_title").asText();
-                String imagePath = new StringBuilder()
-                        .append("http://image.tmdb.org/t/p/w154") // IMAGE BASE URL
-                        .append(jsonNode.get("poster_path").asText()).toString();
-                String releaseDate = jsonNode.get("release_date").asText();
-                String overview = jsonNode.get("overview").asText();
+                    results.forEach(jsonNode -> {
+                        int id = jsonNode.get("id").asInt();
+                        String title = jsonNode.get("original_title").asText();
+                        String imagePath = new StringBuilder()
+                                .append("http://image.tmdb.org/t/p/w154") // IMAGE BASE URL
+                                .append(jsonNode.get("poster_path").asText()).toString();
+                        String releaseDate = jsonNode.get("release_date").asText();
+                        String overview = jsonNode.get("overview").asText();
 
-                MovieFx movieFx = new MovieFx();
-                movieFx.setId(id);
-                movieFx.setTitle(title);
-                movieFx.setOverview(overview);
-                movieFx.setReleaseDate(releaseDate);
-                movieFx.setPosterPath(imagePath);
-                
-                addMovieToList(movieFx);
+                        MovieFx movieFx = new MovieFx();
+                        movieFx.setId(id);
+                        movieFx.setTitle(title);
+                        movieFx.setOverview(overview);
+                        movieFx.setReleaseDate(releaseDate);
+                        movieFx.setPosterPath(imagePath);
 
-            });
+                        addMovieToList(movieFx);
+                    });
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+
     }
 
     private void addMovieToList(MovieFx movieFx) {

@@ -37,12 +37,14 @@ public class ImportMoviesController implements Initializable {
     @FXML
     private JFXTextField keywordField;
 
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initChoiceBox();
         initTableConfig();
-        model.loadDataFromAPI(yearChoice.getValue());
         table.setItems(model.getMovieFxFilteredList());
+
+        model.loadDataFromAPI(yearChoice.getValue());
 
         yearChoice.setOnAction(event -> {
             model.loadDataFromAPI(yearChoice.getValue());

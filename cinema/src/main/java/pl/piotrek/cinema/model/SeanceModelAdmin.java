@@ -69,23 +69,42 @@ public class SeanceModelAdmin {
 
 
     public void loadDataFromAPI(){
-        seanceFxObservableList.clear();
 
-        String url = ServerInfo.SEANCE_ENDPOINT + "/get/all";
-        ResponseEntity<ArrayList<SeanceDTO> > response =
-                cookieRestTemplate.exchange(url, HttpMethod.GET, null,  new ParameterizedTypeReference<ArrayList<SeanceDTO>>(){});
+        Runnable task = new Runnable() {
+            @Override
+            public void run() {
+                seanceFxObservableList.clear();
 
-        ArrayList<SeanceDTO> responseList = response.getBody();
-        for(SeanceDTO s : responseList){
-            SeanceFx seanceFx = SeanceConverter.seanceDtoToSeance(s);
+                String url = ServerInfo.SEANCE_ENDPOINT + "/get/all";
+                ResponseEntity<ArrayList<SeanceDTO> > response =
+                        cookieRestTemplate.exchange(url, HttpMethod.GET, null,  new ParameterizedTypeReference<ArrayList<SeanceDTO>>(){});
 
-            // dla kazdego musze dociagnac z serwera ilosc wolnych miejsc
-            String url1 = ServerInfo.SEANCE_ENDPOINT + "/get/" + seanceFx.getId() + "/seat/free/count";
-            ResponseEntity<Integer> responseEntitty = cookieRestTemplate.getForEntity(url1, Integer.class);
-            seanceFx.setFreeSeatsCount(responseEntitty.getBody());
+                ArrayList<SeanceDTO> responseList = response.getBody();
+//                for(SeanceDTO s : responseList){
+//                    SeanceFx seanceFx = SeanceConverter.seanceDtoToSeance(s);
+//
+//                    // dla kazdego musze dociagnac z serwera ilosc wolnych miejsc
+//                    String url1 = ServerInfo.SEANCE_ENDPOINT + "/get/" + seanceFx.getId() + "/seat/free/count";
+//                    ResponseEntity<Integer> responseEntitty = cookieRestTemplate.getForEntity(url1, Integer.class);
+//                    seanceFx.setFreeSeatsCount(responseEntitty.getBody());
+//
+//                    addSeanceToTable(seanceFx);
+//                }
 
-            addSeanceToTable(seanceFx);
-        }
+                responseList.stream()
+                        .map(SeanceConverter::seanceDtoToSeance)
+                        .forEach(seanceFx -> {
+                            String url1 = ServerInfo.SEANCE_ENDPOINT + "/get/" + seanceFx.getId() + "/seat/free/count";
+                            ResponseEntity<Integer> responseEntity = cookieRestTemplate.getForEntity(url1, Integer.class);
+                            seanceFx.setFreeSeatsCount(responseEntity.getBody());
+                            addSeanceToTable(seanceFx);
+                        });
+            }
+        };
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
 
     }
 

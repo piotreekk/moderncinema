@@ -32,10 +32,6 @@ public class AuditoriumModel {
     private ObservableList<AuditoriumFx> auditoriumFxObservableList = FXCollections.observableArrayList();
 
 
-    public void addAuditoriumToList(AuditoriumFx auditoriumFx){
-        auditoriumFxObservableList.add(auditoriumFx);
-    }
-
     public AuditoriumFx getAuditoriumFxObjectProperty() {
         return auditoriumFxObjectProperty.get();
     }
@@ -49,18 +45,35 @@ public class AuditoriumModel {
     }
 
 
+    private void addAuditoriumToList(AuditoriumFx auditoriumFx){
+        auditoriumFxObservableList.add(auditoriumFx);
+    }
+
     public void loadDataFromAPI(){
-        auditoriumFxObservableList.clear();
+        Runnable task = new Runnable() {
+            @Override
+            public void run() {
+                auditoriumFxObservableList.clear();
 
-        String url = ServerInfo.AUDITORIUM_ENDPOINT + "/get/all";
-        ResponseEntity<ArrayList<AuditoriumDTO>> response =
-                cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<ArrayList<AuditoriumDTO>>(){});
-        ArrayList<AuditoriumDTO> responseList = response.getBody();
+                String url = ServerInfo.AUDITORIUM_ENDPOINT + "/get/all";
+                ResponseEntity<ArrayList<AuditoriumDTO>> response =
+                        cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<ArrayList<AuditoriumDTO>>(){});
+                ArrayList<AuditoriumDTO> responseList = response.getBody();
 
-        for(AuditoriumDTO a : responseList){
-            AuditoriumFx auditoriumFx = AuditoriumConverter.auditoriumDtoToAuditorium(a);
-            addAuditoriumToList(auditoriumFx);
-        }
+//                for(AuditoriumDTO a : responseList){
+//                    AuditoriumFx auditoriumFx = AuditoriumConverter.auditoriumDtoToAuditorium(a);
+//                    addAuditoriumToList(auditoriumFx);
+//                }
+
+                responseList.stream()
+                        .map(AuditoriumConverter::auditoriumDtoToAuditorium)
+                        .forEach(auditoriumFx -> addAuditoriumToList(auditoriumFx));
+            }
+        };
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     public void addAuditorium(AuditoriumFx auditoriumFx){

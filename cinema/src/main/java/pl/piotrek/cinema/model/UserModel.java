@@ -13,6 +13,7 @@ import pl.piotrek.cinema.api.dto.UserDTO;
 import pl.piotrek.cinema.config.ServerInfo;
 import pl.piotrek.cinema.model.fx.UserFx;
 import pl.piotrek.cinema.util.CookieRestTemplate;
+import pl.piotrek.cinema.util.converter.UserConverter;
 
 import java.util.ArrayList;
 
@@ -57,25 +58,33 @@ public class UserModel {
     }
 
     public void loadDataFromAPI(){
-        userFxObservableList.clear();
 
-        String url = ServerInfo.USER_ENDPOINT + "/get/admin";
+        Runnable task = new Runnable() {
+            @Override
+            public void run() {
+                userFxObservableList.clear();
+                userFxFilteredList.setPredicate(userFx -> userFx.isActive());
+                String url = ServerInfo.USER_ENDPOINT + "/get/admin";
 
-        ResponseEntity<ArrayList<UserDTO>> response =
-                cookieRestTemplate.exchange(url, HttpMethod.GET, null,  new ParameterizedTypeReference<ArrayList<UserDTO>>(){});
+                ResponseEntity<ArrayList<UserDTO>> response =
+                        cookieRestTemplate.exchange(url, HttpMethod.GET, null,  new ParameterizedTypeReference<ArrayList<UserDTO>>(){});
 
-        ArrayList<UserDTO> responseList = response.getBody();
+                ArrayList<UserDTO> responseList = response.getBody();
 
-        for(UserDTO u : responseList){
-            UserFx userFx = new UserFx();
-            userFx.setId(u.getId());
-            userFx.setFirstName(u.getFirstName());
-            userFx.setLastName(u.getLastName());
-            userFx.setEmail(u.getEmail());
-            userFx.setActive(u.isEnabled());
+//                for(UserDTO u : responseList){
+//                    UserFx userFx = UserConverter.UserDtoToUser(u);
+//                    addUserToList(userFx);
+//                }
 
-            addUserToList(userFx);
-        }
+                responseList.stream()
+                        .map(UserConverter::UserDtoToUser)
+                        .forEach(UserModel.this::addUserToList);
+            }
+        };
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
     }
 
 

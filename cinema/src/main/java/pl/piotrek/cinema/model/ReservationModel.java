@@ -14,7 +14,6 @@ import pl.piotrek.cinema.util.CookieRestTemplate;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -41,28 +40,37 @@ public class ReservationModel {
     }
 
     public void loadDataFromAPI(Integer user_id){
-        String url = ServerInfo.RESERVATION_ENDPOINT + "/user/" + user_id;
-        ResponseEntity<List<String>> response = cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<String>>(){});
-        if(response.getStatusCode() != HttpStatus.OK) return;
 
-        ArrayList<ReservationFx> list = new ArrayList<>();
-        for(String rs : response.getBody()) {
-            String [] details = rs.split(";");
-            String title = details[0];
-            LocalDate date = LocalDate.parse(details[1]);
-            LocalTime startTime = LocalTime.parse(details[2]);
-            String auditorium = details[3];
-            String seatsString = details[4];
+        Runnable task = new Runnable() {
+            @Override
+            public void run() {
+                String url = ServerInfo.RESERVATION_ENDPOINT + "/user/" + user_id;
+                ResponseEntity<List<String>> response = cookieRestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<String>>(){});
+                if(response.getStatusCode() != HttpStatus.OK) return;
 
-            ReservationFx reservationFx = new ReservationFx();
-            reservationFx.setAuditorium(auditorium);
-            reservationFx.setDate(date);
-            reservationFx.setStartTime(startTime);
-            reservationFx.setMovieTitle(title);
-            reservationFx.setSeats(seatsString);
+                for(String rs : response.getBody()) {
+                    String [] details = rs.split(";");
+                    String title = details[0];
+                    LocalDate date = LocalDate.parse(details[1]);
+                    LocalTime startTime = LocalTime.parse(details[2]);
+                    String auditorium = details[3];
+                    String seatsString = details[4];
 
-            addReservationToList(reservationFx);
-        }
+                    ReservationFx reservationFx = new ReservationFx();
+                    reservationFx.setAuditorium(auditorium);
+                    reservationFx.setDate(date);
+                    reservationFx.setStartTime(startTime);
+                    reservationFx.setMovieTitle(title);
+                    reservationFx.setSeats(seatsString);
+
+                    addReservationToList(reservationFx);
+                }
+            }
+        };
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     private void addReservationToList(ReservationFx reservationFx){
